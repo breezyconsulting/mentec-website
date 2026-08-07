@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /
+
+# This is a staging preview of a redesign concept, deployed separately from
+# the live mentec.com.au site. Left disallowed to avoid duplicate-content
+# / indexing issues until this is ready to go live on the real domain.
