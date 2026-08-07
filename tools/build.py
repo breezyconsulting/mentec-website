@@ -8,7 +8,7 @@ files with duplicated nav/footer markup.
 import os, re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_URL = "__BASE_URL__"  # replaced by deploy.sh once the Pages URL is known
+BASE_URL = "https://breezyconsulting.github.io/mentec-website/"  # replaced by deploy.sh once the Pages URL is known
 NOINDEX = True  # staging deploy — flip to False (and drop robots.txt disallow) at real go-live
 
 SITE_NAME = "Mentec Business Advisory"
