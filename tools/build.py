@@ -1014,14 +1014,6 @@ contact_body = f"""
         <div class="process-item"><span class="num tabular">2</span><div><h4>Engagement proposal</h4><p>If it's a fit, a high-level program is proposed and agreed by all parties.</p></div></div>
         <div class="process-item"><span class="num tabular">3</span><div><h4>Discovery begins</h4><p>Mentec starts understanding the business properly &mdash; before any plan is written.</p></div></div>
       </div>
-      <div class="contact-detail">
-        <p><strong style="color:var(--ink);">Mentec Business Advisory</strong><br>Corporate &middot; Business &middot; Operations Advisory</p>
-        <ul class="foot-contact" style="margin-top:16px; list-style:none;">
-          <li><a href="https://maps.google.com/?q={ADDRESS.replace(' ', '+')}" target="_blank" rel="noopener">{ADDRESS}</a></li>
-          <li><a href="mailto:{EMAIL}">{EMAIL}</a></li>
-          <li><a href="tel:{PHONE_TEL}">{PHONE}</a></li>
-        </ul>
-      </div>
     </div>
   </div>
 </section>

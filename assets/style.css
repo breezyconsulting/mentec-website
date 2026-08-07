@@ -367,7 +367,6 @@ section{padding:80px 0;}
 .field label{font-family:ui-monospace,monospace; font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; color:var(--slate);}
 .field input, .field textarea{border:1px solid var(--line); background:var(--paper-raised); color:var(--text); padding:12px 14px; font-size:15px; font-family:inherit; border-radius:var(--radius);}
 .field input:focus, .field textarea:focus{outline:2px solid var(--steel); outline-offset:1px; border-color:var(--steel);}
-.contact-detail{margin-top:36px; padding-top:24px; border-top:1px solid var(--line); font-size:14.5px;}
 
 /* ---------- FOOTER CONTACT BLOCK (shared: footer + contact page) ---------- */
 .foot-contact{display:flex; flex-direction:column; gap:8px; margin-top:18px;}
