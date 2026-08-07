@@ -32,7 +32,7 @@ CLIENTS = [
     {
         "id": "buyerscircle",
         "name": "BuyersCircle Pty Ltd",
-        "category": "Social e-commerce Platform Developer & Retailer",
+        "category": "Social e-commerce Platform & Retailer",
         "summary": "Established to target the online e-commerce market, utilising in-house developed platform systems. The business strategy needed to be strengthened and acquisition methods needed to be coordinated, and the leadership needed direction.",
         "engagement": "With a need for change, Mentec formulated a business plan to target the wholesale sector as a simpler variant of the SaaS product.",
         "result": "This led to new funding models and a more attractive investment proposition.",
@@ -51,10 +51,10 @@ CLIENTS = [
     },
     {
         "id": "coax",
-        "name": "COAX AU PTY LTD",
+        "name": "Coax AU Pty Ltd",
         "category": "Simplified Business Communications",
         "summary": "Coax was born out of the belief that communication for your business should be as simple as possible.",
-        "engagement": "Working with Mentec, through strategic planning and financial management, COAX has been able to offer targeted, tailored help for the startup small business.",
+        "engagement": "Working with Mentec, through strategic planning and financial management, Coax has been able to offer targeted, tailored help for the startup small business.",
         "result": "Faster conversations, which in turn lead to more sales and stronger relationships.",
         "stat_value": None, "stat_label": None,
         "featured": False,
@@ -71,11 +71,42 @@ CLIENTS = [
     },
 ]
 
+# Real clients, quoted with their written approval to use this wording.
+TESTIMONIALS = [
+    {
+        "quote": "Within the first quarter we finally had reporting we could hand to our bank without scrambling. That alone changed how we made decisions.",
+        "name": "Lance Eerhard", "title": "CEO", "company": "BuyersCircle",
+    },
+    {
+        "quote": "Every other advisor we spoke to sold a strategy document. Mentec was the only one still in the building three months later.",
+        "name": "Daniel Siric", "title": "Director", "company": "Siric Architects",
+    },
+    {
+        "quote": "Having someone with equity in the outcome changes the conversation. It stopped feeling like billable hours and started feeling like a partner.",
+        "name": "Joel", "title": "Director", "company": "COAX",
+    },
+]
+
+def testimonials_grid():
+    cards = ""
+    for t in TESTIMONIALS:
+        cards += f"""      <div class="testi-card">
+        <blockquote>&ldquo;{t['quote']}&rdquo;</blockquote>
+        <div class="testi-who"><strong>{t['name']}</strong><span>{t['title']}, {t['company']}</span></div>
+      </div>
+"""
+    return cards
+
 PAGES = ["home","services","approach","case-studies","clients","about","insights","contact"]
+# Clean URLs: every page but home is its own directory (e.g. services/index.html,
+# served at /services/) so no page ever needs a ".html" in its address, and home
+# lives at the site root rather than at "/index.html".
 SLUG_TO_FILE = {
-    "home":"index.html","services":"services.html","approach":"approach.html",
-    "case-studies":"case-studies.html","clients":"clients.html","about":"about.html",
-    "insights":"insights.html","contact":"contact.html",
+    "home": "index.html",
+    "services": "services/index.html", "approach": "approach/index.html",
+    "case-studies": "case-studies/index.html", "clients": "clients/index.html",
+    "about": "about/index.html", "insights": "insights/index.html",
+    "contact": "contact/index.html",
 }
 TITLES = {
     "home": "Mentec Business Advisory | CFO-Calibre Leadership for Growing SMEs",
@@ -234,8 +265,7 @@ HEAD_EXTRA = {
 def head(slug):
     title = TITLES[slug]
     desc = DESCRIPTIONS[slug]
-    file = SLUG_TO_FILE[slug]
-    url = f"{BASE_URL}{'' if slug=='home' else file}"
+    url = f"{BASE_URL}{'' if slug=='home' else slug+'/'}"
     robots = '<meta name="robots" content="noindex,nofollow">\n  ' if NOINDEX else ''
     return f"""<!doctype html>
 <html lang="en-AU">
@@ -287,8 +317,31 @@ def page(slug, breadcrumb_label, h1, dek, body):
     out += FOOT
     return out
 
+SUBPAGE_SLUGS = [s for s in PAGES if s != "home"]
+
+def rewrite_links(html, slug):
+    """Every page is generated writing plain 'services.html' / 'assets/x' style
+    references, regardless of where it ends up on disk. This is the single place
+    that turns those into real clean-URL paths for the page's actual depth:
+    home lives at the site root; every other page is its own directory
+    (services/index.html served at /services/), so it needs a '../' prefix
+    for both sibling pages and shared assets."""
+    prefix = "" if slug == "home" else "../"
+    html = html.replace('href="assets/', f'href="{prefix}assets/')
+    html = html.replace('src="assets/', f'src="{prefix}assets/')
+    html = html.replace('href="index.html"', f'href="{prefix if prefix else "./"}"')
+    for s in SUBPAGE_SLUGS:
+        html = re.sub(
+            rf'href="{re.escape(s)}\.html(#[a-zA-Z0-9_-]+)?"',
+            lambda m: f'href="{prefix}{s}/{m.group(1) or ""}"',
+            html,
+        )
+    return html
+
 def write(slug, content):
+    content = rewrite_links(content, slug)
     path = os.path.join(ROOT, SLUG_TO_FILE[slug])
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
         f.write(content)
     print("wrote", SLUG_TO_FILE[slug])
@@ -521,22 +574,7 @@ home_body = f"""
       <p><a href="clients.html" class="inline-link">See clients &amp; more testimonials &rarr;</a></p>
     </div>
     <div class="testi-grid">
-      <div class="testi-card">
-        <span class="sample-tag">Sample &mdash; replace with real quote</span>
-        <blockquote>&ldquo;Within the first quarter we finally had reporting we could hand to our bank without scrambling. That alone changed how we made decisions.&rdquo;</blockquote>
-        <div class="testi-who"><strong>Founder / Managing Director</strong><span>Client name, company &mdash; pending</span></div>
-      </div>
-      <div class="testi-card">
-        <span class="sample-tag">Sample &mdash; replace with real quote</span>
-        <blockquote>&ldquo;Every other advisor we spoke to sold a strategy document. Mentec was the only one still in the building three months later.&rdquo;</blockquote>
-        <div class="testi-who"><strong>Managing Director</strong><span>Client name, company &mdash; pending</span></div>
-      </div>
-      <div class="testi-card">
-        <span class="sample-tag">Sample &mdash; replace with real quote</span>
-        <blockquote>&ldquo;Having someone with equity in the outcome changes the conversation. It stopped feeling like billable hours and started feeling like a partner.&rdquo;</blockquote>
-        <div class="testi-who"><strong>Founder</strong><span>Client name, company &mdash; pending</span></div>
-      </div>
-    </div>
+{testimonials_grid()}    </div>
   </div>
 </section>
 
@@ -862,22 +900,7 @@ clients_body = f"""
 <section class="wrap" data-reveal>
   <div class="section-head"><span class="eyebrow">In their words</span><h2>What partners say once the plan is actually running.</h2></div>
   <div class="testi-grid">
-    <div class="testi-card">
-      <span class="sample-tag">Sample &mdash; replace with real quote</span>
-      <blockquote>&ldquo;Within the first quarter we finally had reporting we could hand to our bank without scrambling. That alone changed how we made decisions.&rdquo;</blockquote>
-      <div class="testi-who"><strong>Founder / Managing Director</strong><span>Client name, company &mdash; pending</span></div>
-    </div>
-    <div class="testi-card">
-      <span class="sample-tag">Sample &mdash; replace with real quote</span>
-      <blockquote>&ldquo;Every other advisor we spoke to sold a strategy document. Mentec was the only one still in the building three months later.&rdquo;</blockquote>
-      <div class="testi-who"><strong>Managing Director</strong><span>Client name, company &mdash; pending</span></div>
-    </div>
-    <div class="testi-card">
-      <span class="sample-tag">Sample &mdash; replace with real quote</span>
-      <blockquote>&ldquo;Having someone with equity in the outcome changes the conversation. It stopped feeling like billable hours and started feeling like a partner.&rdquo;</blockquote>
-      <div class="testi-who"><strong>Founder</strong><span>Client name, company &mdash; pending</span></div>
-    </div>
-  </div>
+{testimonials_grid()}  </div>
 </section>
 
 <section class="final-cta">
