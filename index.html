@@ -177,13 +177,23 @@
           <p>A typical shape for a 12-month partnership, indexed to 100 at the start. Not a specific client's figures &mdash; see the <a href="case-studies/" class="inline-link">real case studies</a> for actual results.</p>
         </div>
         <div class="chart-legend">
-      <span class="chart-legend-item"><i class="chart-swatch" data-series="revenue"></i>Revenue (indexed)</span>
-      <span class="chart-legend-item"><i class="chart-swatch" data-series="profit"></i>Profit (indexed)</span>
-      <span class="chart-legend-item"><i class="chart-swatch" data-series="cost"></i>Operating cost (indexed)</span>
+      <button type="button" class="chart-legend-item" data-series="revenue" aria-pressed="false"><i class="chart-swatch" data-series="revenue"></i>Revenue (indexed)</button>
+      <button type="button" class="chart-legend-item" data-series="profit" aria-pressed="false"><i class="chart-swatch" data-series="profit"></i>Profit (indexed)</button>
+      <button type="button" class="chart-legend-item" data-series="cost" aria-pressed="false"><i class="chart-swatch" data-series="cost"></i>Operating cost (indexed)</button>
         </div>
       </div>
       <div class="chart-svg-wrap">
         <svg viewBox="0 0 720 300" class="chart-svg" role="img" aria-label="Indexed revenue, profit and operating cost over a 12-month illustrative engagement" data-chart='{"months": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], "series": [{"id": "revenue", "label": "Revenue (indexed)", "values": [100, 104, 109, 113, 119, 124, 129, 133, 137, 141, 145, 148, 152]}, {"id": "profit", "label": "Profit (indexed)", "values": [100, 103, 108, 118, 128, 136, 144, 151, 157, 163, 168, 172, 176]}, {"id": "cost", "label": "Operating cost (indexed)", "values": [100, 99, 97, 94, 92, 90, 88, 87, 86, 85, 84, 83, 82]}], "x0": 12, "x1": 630, "ymin": 76, "ymax": 182, "y0": 26, "y1": 244, "vw": 720, "vh": 300}'>
+          <defs>
+      <linearGradient id="chart-grad-revenue" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" class="chart-grad-stop-start" data-series="revenue"/>
+        <stop offset="100%" class="chart-grad-stop-end" data-series="revenue"/>
+      </linearGradient>
+      <linearGradient id="chart-grad-profit" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" class="chart-grad-stop-start" data-series="profit"/>
+        <stop offset="100%" class="chart-grad-stop-end" data-series="profit"/>
+      </linearGradient>
+          </defs>
           <line x1="12" y1="194.6" x2="630" y2="194.6" class="chart-baseline"/>
           <text x="12" y="186.6" class="chart-axis-label">Start</text>
       <line x1="12" y1="235.8" x2="630" y2="235.8" class="chart-grid"/>
@@ -195,15 +205,20 @@
       <text x="321.0" y="266" class="chart-axis-label" text-anchor="middle">M6</text>
       <text x="475.5" y="266" class="chart-axis-label" text-anchor="middle">M9</text>
       <text x="630.0" y="266" class="chart-axis-label" text-anchor="middle">M12</text>
-      <path d="M12.0,194.6 L63.5,186.4 L115.0,176.1 L166.5,167.9 L218.0,155.6 L269.5,145.3 L321.0,135.0 L372.5,126.8 L424.0,118.5 L475.5,110.3 L527.0,102.1 L578.5,95.9 L630.0,87.7" class="chart-line" data-series="revenue" fill="none"/>
-      <path d="M12.0,194.6 L63.5,188.5 L115.0,178.2 L166.5,157.6 L218.0,137.1 L269.5,120.6 L321.0,104.2 L372.5,89.8 L424.0,77.4 L475.5,65.1 L527.0,54.8 L578.5,46.6 L630.0,38.3" class="chart-line" data-series="profit" fill="none"/>
-      <path d="M12.0,194.6 L63.5,196.7 L115.0,200.8 L166.5,207.0 L218.0,211.1 L269.5,215.2 L321.0,219.3 L372.5,221.4 L424.0,223.4 L475.5,225.5 L527.0,227.5 L578.5,229.6 L630.0,231.7" class="chart-line" data-series="cost" fill="none"/>
+      <path d="M12.00,194.64 C20.58,193.27 46.33,189.50 63.50,186.42 C80.67,183.33 97.83,179.22 115.00,176.13 C132.17,173.05 149.33,171.33 166.50,167.91 C183.67,164.48 200.83,159.34 218.00,155.57 C235.17,151.80 252.33,148.71 269.50,145.28 C286.67,141.86 303.83,138.08 321.00,135.00 C338.17,131.92 355.33,129.52 372.50,126.77 C389.67,124.03 406.83,121.29 424.00,118.55 C441.17,115.81 458.33,113.06 475.50,110.32 C492.67,107.58 509.83,104.49 527.00,102.09 C544.17,99.69 561.33,98.32 578.50,95.92 C595.67,93.53 621.42,89.07 630.00,87.70 L630.00,194.64 L12.00,194.64 Z" class="chart-area" data-series="revenue" fill="url(#chart-grad-revenue)" stroke="none"/>
+      <path d="M12.00,194.64 C20.58,193.61 46.33,191.21 63.50,188.47 C80.67,185.73 97.83,183.33 115.00,178.19 C132.17,173.05 149.33,164.48 166.50,157.62 C183.67,150.77 200.83,143.23 218.00,137.06 C235.17,130.89 252.33,126.09 269.50,120.60 C286.67,115.12 303.83,109.29 321.00,104.15 C338.17,99.01 355.33,94.21 372.50,89.75 C389.67,85.30 406.83,81.53 424.00,77.42 C441.17,73.30 458.33,68.85 475.50,65.08 C492.67,61.31 509.83,57.88 527.00,54.79 C544.17,51.71 561.33,49.31 578.50,46.57 C595.67,43.82 621.42,39.71 630.00,38.34 L630.00,194.64 L12.00,194.64 Z" class="chart-area" data-series="profit" fill="url(#chart-grad-profit)" stroke="none"/>
+      <path d="M12.00,194.64 C20.58,193.27 46.33,189.50 63.50,186.42 C80.67,183.33 97.83,179.22 115.00,176.13 C132.17,173.05 149.33,171.33 166.50,167.91 C183.67,164.48 200.83,159.34 218.00,155.57 C235.17,151.80 252.33,148.71 269.50,145.28 C286.67,141.86 303.83,138.08 321.00,135.00 C338.17,131.92 355.33,129.52 372.50,126.77 C389.67,124.03 406.83,121.29 424.00,118.55 C441.17,115.81 458.33,113.06 475.50,110.32 C492.67,107.58 509.83,104.49 527.00,102.09 C544.17,99.69 561.33,98.32 578.50,95.92 C595.67,93.53 621.42,89.07 630.00,87.70" class="chart-line" data-series="revenue" fill="none"/>
+      <path d="M12.00,194.64 C20.58,193.61 46.33,191.21 63.50,188.47 C80.67,185.73 97.83,183.33 115.00,178.19 C132.17,173.05 149.33,164.48 166.50,157.62 C183.67,150.77 200.83,143.23 218.00,137.06 C235.17,130.89 252.33,126.09 269.50,120.60 C286.67,115.12 303.83,109.29 321.00,104.15 C338.17,99.01 355.33,94.21 372.50,89.75 C389.67,85.30 406.83,81.53 424.00,77.42 C441.17,73.30 458.33,68.85 475.50,65.08 C492.67,61.31 509.83,57.88 527.00,54.79 C544.17,51.71 561.33,49.31 578.50,46.57 C595.67,43.82 621.42,39.71 630.00,38.34" class="chart-line" data-series="profit" fill="none"/>
+      <path d="M12.00,194.64 C20.58,194.98 46.33,195.67 63.50,196.70 C80.67,197.73 97.83,199.10 115.00,200.81 C132.17,202.53 149.33,205.27 166.50,206.98 C183.67,208.69 200.83,209.72 218.00,211.09 C235.17,212.47 252.33,213.84 269.50,215.21 C286.67,216.58 303.83,218.29 321.00,219.32 C338.17,220.35 355.33,220.69 372.50,221.38 C389.67,222.06 406.83,222.75 424.00,223.43 C441.17,224.12 458.33,224.81 475.50,225.49 C492.67,226.18 509.83,226.86 527.00,227.55 C544.17,228.23 561.33,228.92 578.50,229.60 C595.67,230.29 621.42,231.32 630.00,231.66" class="chart-line" data-series="cost" fill="none"/>
       <circle cx="630.0" cy="87.7" r="3.5" class="chart-dot" data-series="revenue"/>
       <circle cx="630.0" cy="38.3" r="3.5" class="chart-dot" data-series="profit"/>
       <circle cx="630.0" cy="231.7" r="3.5" class="chart-dot" data-series="cost"/>
-      <g class="chart-endlabel" data-series="revenue" transform="translate(640.0,87.7)"><text class="chart-endlabel-pct" dy="-4">+52%</text></g>
-      <g class="chart-endlabel" data-series="profit" transform="translate(640.0,38.3)"><text class="chart-endlabel-pct" dy="-4">+76%</text></g>
-      <g class="chart-endlabel" data-series="cost" transform="translate(640.0,231.7)"><text class="chart-endlabel-pct" dy="-4">-18%</text></g>
+      <circle cx="630.0" cy="87.7" r="3.5" class="chart-ping" data-series="revenue"/>
+      <circle cx="630.0" cy="38.3" r="3.5" class="chart-ping" data-series="profit"/>
+      <circle cx="630.0" cy="231.7" r="3.5" class="chart-ping" data-series="cost"/>
+      <g class="chart-endlabel" data-series="revenue" transform="translate(640.0,87.7)"><text class="chart-endlabel-pct" data-countup-pct="52" dy="-4">+52%</text></g>
+      <g class="chart-endlabel" data-series="profit" transform="translate(640.0,38.3)"><text class="chart-endlabel-pct" data-countup-pct="76" dy="-4">+76%</text></g>
+      <g class="chart-endlabel" data-series="cost" transform="translate(640.0,231.7)"><text class="chart-endlabel-pct" data-countup-pct="-18" dy="-4">-18%</text></g>
 
           <line x1="-100" y1="26" x2="-100" y2="244" class="chart-crosshair"/>
           <circle r="4" class="chart-hover-dot" data-series="revenue" style="opacity:0"/>
@@ -352,6 +367,9 @@
           <li><a href="services/#exe">Execution &amp; Delivery</a></li>
           <li><a href="services/#val">Enterprise Value &amp; Growth</a></li>
           <li><a href="services/#dd">Due Diligence &amp; Risk</a></li>
+          <li><a href="services/digital-strategy-execution/">Digital Strategy &amp; Execution</a></li>
+          <li><a href="services/ecommerce-strategy-execution/">Ecommerce Strategy &amp; Execution</a></li>
+          <li><a href="services/customer-experience-design/">Customer &amp; UX Design</a></li>
         </ul>
       </div>
       <div>

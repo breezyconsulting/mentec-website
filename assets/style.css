@@ -210,7 +210,14 @@ section{padding:80px 0;}
 .chart-head h3{font-size:21px; margin-top:10px; max-width:32ch;}
 .chart-head p{font-size:14px; margin-top:10px; max-width:44ch;}
 .chart-legend{display:flex; flex-direction:column; gap:8px; flex-shrink:0;}
-.chart-legend-item{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-soft); font-family:ui-monospace,monospace;}
+.chart-legend-item{
+  display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-soft); font-family:ui-monospace,monospace;
+  background:none; border:1px solid transparent; padding:5px 8px; margin:-5px -8px; border-radius:20px; cursor:pointer;
+  transition:background .15s ease, opacity .15s ease, border-color .15s ease;
+}
+.chart-legend-item:hover, .chart-legend-item:focus-visible{background:var(--mist-soft); border-color:var(--line);}
+.chart-legend-item.muted{opacity:0.4;}
+.chart-legend-item.muted .chart-swatch{background:transparent !important; border:1.5px solid var(--text-soft);}
 .chart-swatch{width:10px; height:10px; border-radius:50%; display:inline-block; flex-shrink:0;}
 .chart-swatch[data-series="revenue"]{background:var(--series-1);}
 .chart-swatch[data-series="profit"]{background:var(--series-2);}
@@ -223,16 +230,52 @@ section{padding:80px 0;}
 .chart-axis-label{font-family:ui-monospace,monospace; font-size:9.5px; fill:var(--text-soft);}
 .chart-crosshair{stroke:var(--line); stroke-width:1; pointer-events:none; opacity:0; transition:opacity .1s ease;}
 
-.chart-line{stroke-width:2.25px; stroke-linecap:round; stroke-linejoin:round; transition:stroke-dashoffset 1.3s cubic-bezier(.16,.84,.44,1);}
-.chart-line[data-series="revenue"]{stroke:var(--series-1); transition-delay:0s;}
-.chart-line[data-series="profit"]{stroke:var(--series-2); transition-delay:.15s;}
-.chart-line[data-series="cost"]{stroke:var(--series-3); transition-delay:.3s;}
-.chart-dot{stroke:var(--paper-raised); stroke-width:2; opacity:0; transition:opacity .5s ease .9s;}
+.chart-grad-stop-start[data-series="revenue"]{stop-color:var(--series-1); stop-opacity:0.24;}
+.chart-grad-stop-end[data-series="revenue"]{stop-color:var(--series-1); stop-opacity:0;}
+.chart-grad-stop-start[data-series="profit"]{stop-color:var(--series-2); stop-opacity:0.22;}
+.chart-grad-stop-end[data-series="profit"]{stop-color:var(--series-2); stop-opacity:0;}
+.chart-area{opacity:0; transition:opacity 1s ease .5s;}
+.chart-card.drawn .chart-area{opacity:1;}
+.chart-card.no-anim .chart-area{transition:none;}
+.chart-area.dim{opacity:0.05 !important;}
+.chart-area.hidden{opacity:0 !important;}
+
+.chart-line{
+  stroke-width:2.25px; stroke-linecap:round; stroke-linejoin:round;
+  transition:stroke-dashoffset 1.3s cubic-bezier(.16,.84,.44,1), stroke-width .18s ease, opacity .18s ease;
+}
+.chart-line[data-series="revenue"]{stroke:var(--series-1); transition-delay:0s, 0s, 0s; filter:drop-shadow(0 1px 5px color-mix(in srgb, var(--series-1) 45%, transparent));}
+.chart-line[data-series="profit"]{stroke:var(--series-2); transition-delay:.15s, 0s, 0s; filter:drop-shadow(0 1px 5px color-mix(in srgb, var(--series-2) 45%, transparent));}
+.chart-line[data-series="cost"]{stroke:var(--series-3); transition-delay:.3s, 0s, 0s; filter:drop-shadow(0 1px 5px color-mix(in srgb, var(--series-3) 35%, transparent));}
+.chart-line.spotlight{stroke-width:3.5px;}
+.chart-line.dim{opacity:0.18;}
+.chart-line.hidden{opacity:0;}
+
+.chart-dot{stroke:var(--paper-raised); stroke-width:2; opacity:0; transition:opacity .5s ease .9s, transform .18s ease;}
 .chart-card.drawn .chart-dot{opacity:1;}
 .chart-card.no-anim .chart-dot{transition:none;}
 .chart-dot[data-series="revenue"]{fill:var(--series-1);}
 .chart-dot[data-series="profit"]{fill:var(--series-2);}
 .chart-dot[data-series="cost"]{fill:var(--series-3);}
+.chart-dot.dim{opacity:0.18 !important;}
+.chart-dot.hidden{opacity:0 !important;}
+.chart-dot.spotlight{transform:scale(1.35); transform-box:fill-box; transform-origin:center;}
+
+/* "Live" ping — a soft radar pulse off the final data point, started only
+   once the line has finished drawing in. */
+@keyframes chartPing{
+  0%{ r:3.5; opacity:0.5; }
+  100%{ r:12; opacity:0; }
+}
+.chart-ping{pointer-events:none; opacity:0;}
+.chart-ping[data-series="revenue"]{fill:var(--series-1);}
+.chart-ping[data-series="profit"]{fill:var(--series-2);}
+.chart-ping[data-series="cost"]{fill:var(--series-3);}
+.chart-card.pinging .chart-ping{animation:chartPing 2.2s cubic-bezier(.2,.7,.4,1) infinite;}
+.chart-card.pinging .chart-ping[data-series="profit"]{animation-delay:.5s;}
+.chart-card.pinging .chart-ping[data-series="cost"]{animation-delay:1s;}
+.chart-ping.hidden{display:none;}
+
 .chart-hover-dot{stroke:var(--paper-raised); stroke-width:2; pointer-events:none; opacity:0; transition:opacity .1s ease;}
 .chart-hover-dot[data-series="revenue"]{fill:var(--series-1);}
 .chart-hover-dot[data-series="profit"]{fill:var(--series-2);}
@@ -241,10 +284,15 @@ section{padding:80px 0;}
 .chart-endlabel{opacity:0; transition:opacity .5s ease .9s;}
 .chart-card.drawn .chart-endlabel{opacity:1;}
 .chart-card.no-anim .chart-endlabel{transition:none;}
-.chart-endlabel-pct{font-family:ui-monospace,monospace; font-size:12.5px; font-weight:600;}
+.chart-endlabel.dim{opacity:0.25 !important;}
+.chart-endlabel.hidden{opacity:0 !important;}
+.chart-endlabel-pct{font-family:ui-monospace,monospace; font-size:12.5px; font-weight:600; font-variant-numeric:tabular-nums;}
 .chart-endlabel[data-series="revenue"] .chart-endlabel-pct{fill:var(--series-1);}
 .chart-endlabel[data-series="profit"] .chart-endlabel-pct{fill:var(--series-2);}
 .chart-endlabel[data-series="cost"] .chart-endlabel-pct{fill:var(--series-3);}
+@media (prefers-reduced-motion: reduce){
+  .chart-card.pinging .chart-ping{animation:none; opacity:0;}
+}
 
 .chart-tooltip{
   position:absolute; top:0; left:0; pointer-events:none; opacity:0; transition:opacity .1s ease;

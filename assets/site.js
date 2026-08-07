@@ -17,20 +17,23 @@ setTimeout(function(){
   // count-up numbers (e.g. "80%") — markup already has the real final value,
   // so no-JS/crawlers see it as-is; this just animates 0 -> value on reveal.
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function animateCountUp(el){
-    var target = parseFloat(el.getAttribute('data-countup'));
-    var suffix = el.getAttribute('data-suffix') || '';
-    var decimals = (el.getAttribute('data-countup').split('.')[1] || '').length;
-    if(reduceMotion || isNaN(target)){ el.textContent = target.toFixed(decimals) + suffix; return; }
-    var duration = 1400, start = null;
+  function animateNumber(target, duration, onFrame){
+    if(reduceMotion || isNaN(target)){ onFrame(target); return; }
+    var start = null;
     function tick(ts){
       if(start === null) start = ts;
       var p = Math.min((ts - start) / duration, 1);
       var eased = 1 - Math.pow(1 - p, 3); // ease-out-cubic
-      el.textContent = (target * eased).toFixed(decimals) + suffix;
-      if(p < 1) requestAnimationFrame(tick); else el.textContent = target.toFixed(decimals) + suffix;
+      onFrame(target * eased, p);
+      if(p < 1) requestAnimationFrame(tick); else onFrame(target, 1);
     }
     requestAnimationFrame(tick);
+  }
+  function animateCountUp(el){
+    var target = parseFloat(el.getAttribute('data-countup'));
+    var suffix = el.getAttribute('data-suffix') || '';
+    var decimals = (el.getAttribute('data-countup').split('.')[1] || '').length;
+    animateNumber(target, 1400, function(v){ el.textContent = v.toFixed(decimals) + suffix; });
   }
   var countEls = document.querySelectorAll('[data-countup]');
   var countIo = ('IntersectionObserver' in window) ? new IntersectionObserver(function(entries){
@@ -38,22 +41,37 @@ setTimeout(function(){
   }, {threshold:0.5}) : null;
   countEls.forEach(function(el){ if(countIo){ countIo.observe(el); } });
 
-  // impact chart: draw-in animation + hover tooltip/crosshair
+  // impact chart: draw-in animation, animated end-labels, a "live" ping once
+  // drawn, hover tooltip/crosshair, and an interactive legend (hover to
+  // spotlight a series, click to toggle it off).
   document.querySelectorAll('.chart-card').forEach(function(card){
     var drawn = false;
     function draw(){
       if(drawn) return;
       drawn = true;
       var paths = card.querySelectorAll('.chart-line');
-      if(reduceMotion){ card.classList.add('drawn', 'no-anim'); return; }
-      paths.forEach(function(path){
-        var len = path.getTotalLength();
-        path.style.strokeDasharray = len;
-        path.style.strokeDashoffset = len;
-        path.getBoundingClientRect(); // force reflow so the transition catches the offset change
-        requestAnimationFrame(function(){ path.style.strokeDashoffset = 0; });
+      var maxDelay = 0;
+      if(reduceMotion){
+        card.classList.add('drawn', 'no-anim');
+      } else {
+        paths.forEach(function(path, i){
+          var len = path.getTotalLength();
+          path.style.strokeDasharray = len;
+          path.style.strokeDashoffset = len;
+          path.getBoundingClientRect(); // force reflow so the transition catches the offset change
+          requestAnimationFrame(function(){ path.style.strokeDashoffset = 0; });
+          maxDelay = Math.max(maxDelay, i * 150);
+        });
+        card.classList.add('drawn');
+      }
+      card.querySelectorAll('.chart-endlabel-pct[data-countup-pct]').forEach(function(el){
+        var target = parseFloat(el.getAttribute('data-countup-pct'));
+        animateNumber(target, 1300 + maxDelay, function(v){
+          el.textContent = (v >= 0 ? '+' : '') + Math.round(v) + '%';
+        });
       });
-      card.classList.add('drawn');
+      // start the "live" ping once the slowest line has finished drawing
+      setTimeout(function(){ card.classList.add('pinging'); }, reduceMotion ? 0 : 1300 + maxDelay);
     }
     if('IntersectionObserver' in window){
       var cio = new IntersectionObserver(function(entries){
@@ -94,7 +112,9 @@ setTimeout(function(){
       data.series.forEach(function(s){
         var v = s.values[idx];
         var dot = hoverDots[s.id];
-        if(dot){ dot.setAttribute('cx', mx); dot.setAttribute('cy', yFor(v)); dot.style.opacity = 1; }
+        var isHidden = hiddenSeries[s.id];
+        if(dot){ dot.setAttribute('cx', mx); dot.setAttribute('cy', yFor(v)); dot.style.opacity = isHidden ? 0 : 1; }
+        if(isHidden) return;
         rows += '<div class="tt-row"><span>' + s.label.replace(' (indexed)','') + '</span><b class="tabular">' + v + '</b></div>';
       });
       tooltip.innerHTML = '<span class="tt-month">Month ' + idx + '</span>' + rows;
@@ -112,6 +132,52 @@ setTimeout(function(){
     }
     wrap.addEventListener('pointermove', function(e){ move(e.clientX, e.clientY); });
     wrap.addEventListener('pointerleave', leave);
+
+    // interactive legend — hover to spotlight one series, click to toggle it off
+    var hiddenSeries = {};
+    var seriesEls = {};
+    data.series.forEach(function(s){
+      seriesEls[s.id] = {
+        line: svg.querySelector('.chart-line[data-series="' + s.id + '"]'),
+        area: svg.querySelector('.chart-area[data-series="' + s.id + '"]'),
+        dot: svg.querySelector('.chart-dot[data-series="' + s.id + '"]'),
+        ping: svg.querySelector('.chart-ping[data-series="' + s.id + '"]'),
+        label: svg.querySelector('.chart-endlabel[data-series="' + s.id + '"]'),
+      };
+    });
+    function spotlight(id){
+      Object.keys(seriesEls).forEach(function(k){
+        var els = seriesEls[k];
+        var on = (k === id);
+        if(els.line) els.line.classList.toggle('spotlight', on && !hiddenSeries[k]);
+        if(els.line) els.line.classList.toggle('dim', !on && !hiddenSeries[k]);
+        if(els.dot) els.dot.classList.toggle('spotlight', on && !hiddenSeries[k]);
+        if(els.dot) els.dot.classList.toggle('dim', !on && !hiddenSeries[k]);
+        if(els.area) els.area.classList.toggle('dim', !on && !hiddenSeries[k]);
+        if(els.label) els.label.classList.toggle('dim', !on && !hiddenSeries[k]);
+      });
+    }
+    function clearSpotlight(){
+      Object.keys(seriesEls).forEach(function(k){
+        var els = seriesEls[k];
+        [els.line, els.dot, els.area, els.label].forEach(function(el){ if(el) el.classList.remove('spotlight','dim'); });
+      });
+    }
+    card.querySelectorAll('.chart-legend-item').forEach(function(btn){
+      var id = btn.getAttribute('data-series');
+      btn.addEventListener('mouseenter', function(){ if(!hiddenSeries[id]) spotlight(id); });
+      btn.addEventListener('focus', function(){ if(!hiddenSeries[id]) spotlight(id); });
+      btn.addEventListener('mouseleave', clearSpotlight);
+      btn.addEventListener('blur', clearSpotlight);
+      btn.addEventListener('click', function(){
+        hiddenSeries[id] = !hiddenSeries[id];
+        var els = seriesEls[id];
+        [els.line, els.dot, els.area, els.ping, els.label].forEach(function(el){ if(el) el.classList.toggle('hidden', hiddenSeries[id]); });
+        btn.classList.toggle('muted', hiddenSeries[id]);
+        btn.setAttribute('aria-pressed', hiddenSeries[id] ? 'true' : 'false');
+        clearSpotlight();
+      });
+    });
   });
 
   // mega nav (Company dropdown)

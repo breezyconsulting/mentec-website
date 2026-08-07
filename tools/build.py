@@ -97,17 +97,21 @@ def testimonials_grid():
 """
     return cards
 
-PAGES = ["home","services","approach","case-studies","clients","about","insights","contact"]
-# Clean URLs: every page but home is its own directory (e.g. services/index.html,
-# served at /services/) so no page ever needs a ".html" in its address, and home
-# lives at the site root rather than at "/index.html".
-SLUG_TO_FILE = {
-    "home": "index.html",
-    "services": "services/index.html", "approach": "approach/index.html",
-    "case-studies": "case-studies/index.html", "clients": "clients/index.html",
-    "about": "about/index.html", "insights": "insights/index.html",
-    "contact": "contact/index.html",
+PAGES = ["home","services","approach","case-studies","clients","about","insights","contact",
+         "digital-strategy-execution","ecommerce-strategy-execution","customer-experience-design"]
+# Clean URLs, arbitrary nesting: SLUG_DIR is the single source of truth for where a
+# page lives on disk ("." = site root). Every page but home is a directory with an
+# index.html inside it, so nothing is ever linked with a ".html" extension. The three
+# new service sub-pages nest one level deeper, under services/.
+SLUG_DIR = {
+    "home": ".",
+    "services": "services", "approach": "approach", "case-studies": "case-studies",
+    "clients": "clients", "about": "about", "insights": "insights", "contact": "contact",
+    "digital-strategy-execution": "services/digital-strategy-execution",
+    "ecommerce-strategy-execution": "services/ecommerce-strategy-execution",
+    "customer-experience-design": "services/customer-experience-design",
 }
+SLUG_TO_FILE = {slug: (d + "/index.html" if d != "." else "index.html") for slug, d in SLUG_DIR.items()}
 TITLES = {
     "home": "Mentec Business Advisory | CFO-Calibre Leadership for Growing SMEs",
     "services": "Services | CFO Leadership, Strategy & Execution — Mentec Business Advisory",
@@ -117,6 +121,9 @@ TITLES = {
     "about": "About | Joe Siric & the Mentec Story — Mentec Business Advisory",
     "insights": "Insights | CFO & Business Advisory Articles — Mentec Business Advisory",
     "contact": "Contact | Book an Introductory Call — Mentec Business Advisory",
+    "digital-strategy-execution": "Digital Strategy & Execution — Mentec Business Advisory",
+    "ecommerce-strategy-execution": "Ecommerce Strategy & Execution — Mentec Business Advisory",
+    "customer-experience-design": "Customer & User Experience Design — Mentec Business Advisory",
 }
 DESCRIPTIONS = {
     "home": "Mentec pairs 30+ years of senior CFO experience with an equity-aligned partnership model for ambitious Australian SMEs — strategy, planning and hands-on execution.",
@@ -127,6 +134,9 @@ DESCRIPTIONS = {
     "about": "Founder Joe Siric spent his career as a CFO before founding Mentec Business Advisory. The story, credentials and pillars behind the partnership model.",
     "insights": "Field notes on CFO-level financial management, enterprise value and strategic planning for SME business owners.",
     "contact": "Book a 20-minute introductory call with Mentec Business Advisory, or reach us directly by phone or email.",
+    "digital-strategy-execution": "Digital transformation roadmaps and hands-on execution, led by a team with senior digital leadership experience across private and public companies.",
+    "ecommerce-strategy-execution": "Ecommerce channel strategy, unit economics and execution support, grounded in senior ecommerce leadership across private and public companies.",
+    "customer-experience-design": "Customer and user experience design tied to commercial outcomes, led by a team with senior CX/UX leadership across private and public companies.",
 }
 
 COMPANY_PAGES = {"approach", "case-studies", "clients", "about"}
@@ -212,6 +222,9 @@ def footer_html():
           <li><a href="services.html#exe">Execution &amp; Delivery</a></li>
           <li><a href="services.html#val">Enterprise Value &amp; Growth</a></li>
           <li><a href="services.html#dd">Due Diligence &amp; Risk</a></li>
+          <li><a href="digital-strategy-execution.html">Digital Strategy &amp; Execution</a></li>
+          <li><a href="ecommerce-strategy-execution.html">Ecommerce Strategy &amp; Execution</a></li>
+          <li><a href="customer-experience-design.html">Customer &amp; UX Design</a></li>
         </ul>
       </div>
       <div>
@@ -265,7 +278,7 @@ HEAD_EXTRA = {
 def head(slug):
     title = TITLES[slug]
     desc = DESCRIPTIONS[slug]
-    url = f"{BASE_URL}{'' if slug=='home' else slug+'/'}"
+    url = f"{BASE_URL}{'' if slug=='home' else SLUG_DIR[slug]+'/'}"
     robots = '<meta name="robots" content="noindex,nofollow">\n  ' if NOINDEX else ''
     return f"""<!doctype html>
 <html lang="en-AU">
@@ -299,43 +312,63 @@ FOOT = """
 </html>
 """
 
-def page(slug, breadcrumb_label, h1, dek, body):
+def page(slug, breadcrumb_label, h1, dek, body, parent=None):
+    """parent, if given, is (label, slug) for a page nested under another
+    (e.g. a services/ sub-page): renders "Home / Services / {breadcrumb_label}"."""
     out = head(slug)
     out += nav_html(slug)
-    out += f"""
+    if slug != "home":
+        crumb = '<a href="index.html">Home</a>'
+        if parent:
+            crumb += f' / <a href="{parent[1]}.html">{parent[0]}</a>'
+        crumb += f' / {breadcrumb_label}'
+        out += f"""
 <div class="pagehead">
   <div class="wrap">
-    <div class="breadcrumb"><a href="index.html">Home</a> / {breadcrumb_label}</div>
+    <div class="breadcrumb">{crumb}</div>
     <span class="eyebrow">{breadcrumb_label}</span>
     <h1>{h1}</h1>
     <p class="dek">{dek}</p>
   </div>
 </div>
-""" if slug != "home" else ""
+"""
     out += body
     out += footer_html()
     out += FOOT
     return out
 
 SUBPAGE_SLUGS = [s for s in PAGES if s != "home"]
+# Longest-slug-first so e.g. "digital-strategy-execution" (which contains no
+# shorter slug as a substring here, but this keeps the rule generally safe)
+# never gets shadowed by a shorter match.
+SUBPAGE_SLUGS.sort(key=len, reverse=True)
 
 def rewrite_links(html, slug):
     """Every page is generated writing plain 'services.html' / 'assets/x' style
-    references, regardless of where it ends up on disk. This is the single place
-    that turns those into real clean-URL paths for the page's actual depth:
-    home lives at the site root; every other page is its own directory
-    (services/index.html served at /services/), so it needs a '../' prefix
-    for both sibling pages and shared assets."""
-    prefix = "" if slug == "home" else "../"
-    html = html.replace('href="assets/', f'href="{prefix}assets/')
-    html = html.replace('src="assets/', f'src="{prefix}assets/')
-    html = html.replace('href="index.html"', f'href="{prefix if prefix else "./"}"')
+    references, regardless of where it actually ends up on disk. This is the
+    single place that turns those into real clean-URL, ../-relative paths for
+    wherever this page and its target actually live (SLUG_DIR), so templates
+    never need to hand-compute a relative path themselves — including for the
+    services/ sub-pages, which sit one level deeper than everything else."""
+    cur_dir = SLUG_DIR[slug]
+    def rel(target_dir):
+        r = os.path.relpath(target_dir, start=cur_dir)
+        return "" if r == "." else r.replace(os.sep, "/") + "/"
+    root_prefix = rel(".")  # e.g. "" for home, "../" one level deep, "../../" two levels deep
+    # assets/ lives at the root, and the literal strings below already include
+    # "assets/" themselves, so they only need the prefix to reach the root.
+    html = html.replace('href="assets/', f'href="{root_prefix}assets/')
+    html = html.replace('src="assets/', f'src="{root_prefix}assets/')
+    html = html.replace('href="index.html"', f'href="{root_prefix or "./"}"')
     for s in SUBPAGE_SLUGS:
-        html = re.sub(
-            rf'href="{re.escape(s)}\.html(#[a-zA-Z0-9_-]+)?"',
-            lambda m: f'href="{prefix}{s}/{m.group(1) or ""}"',
-            html,
-        )
+        target_href = rel(SLUG_DIR[s])
+        def _sub(m, target_href=target_href):
+            frag = m.group(1) or ""
+            # self-link with no fragment (e.g. this page's own entry in a nav
+            # list): target_href is "" here, so fall back to "./" rather than
+            # emitting a bare href="".
+            return f'href="{target_href or ("./" if not frag else "")}{frag}"'
+        html = re.sub(rf'href="{re.escape(s)}\.html(#[a-zA-Z0-9_-]+)?"', _sub, html)
     return html
 
 def write(slug, content):
@@ -366,11 +399,11 @@ def client_chip_row():
 # client's figures (labelled as such on the chart itself).
 CHART_MONTHS = list(range(13))
 CHART_SERIES = [
-    {"id": "revenue", "label": "Revenue (indexed)", "role": "series-1",
+    {"id": "revenue", "label": "Revenue (indexed)", "role": "series-1", "fill": True,
      "values": [100,104,109,113,119,124,129,133,137,141,145,148,152]},
-    {"id": "profit", "label": "Profit (indexed)", "role": "series-2",
+    {"id": "profit", "label": "Profit (indexed)", "role": "series-2", "fill": True,
      "values": [100,103,108,118,128,136,144,151,157,163,168,172,176]},
-    {"id": "cost", "label": "Operating cost (indexed)", "role": "series-3",
+    {"id": "cost", "label": "Operating cost (indexed)", "role": "series-3", "fill": False,
      "values": [100,99,97,94,92,90,88,87,86,85,84,83,82]},
 ]
 CHART_VW, CHART_VH = 720, 300
@@ -385,9 +418,29 @@ def _cy(v):
     t = (v - CHART_YMIN) / (CHART_YMAX - CHART_YMIN)
     return CHART_Y1 - t * (CHART_Y1 - CHART_Y0)
 
-def _path_d(values):
-    pts = [f"{_cx(i):.1f},{_cy(v):.1f}" for i, v in enumerate(values)]
-    return "M" + " L".join(pts)
+def _smooth_path_d(values):
+    """Catmull-Rom -> cubic Bezier through every real data point (tension 1/6,
+    the standard conversion) -- a curved line rather than straight segments,
+    without inventing values the data doesn't support."""
+    pts = [(_cx(i), _cy(v)) for i, v in enumerate(values)]
+    n = len(pts)
+    if n < 3:
+        return "M" + " L".join(f"{x:.2f},{y:.2f}" for x, y in pts)
+    d = f"M{pts[0][0]:.2f},{pts[0][1]:.2f} "
+    for i in range(n - 1):
+        p0 = pts[i - 1] if i > 0 else pts[i]
+        p1 = pts[i]
+        p2 = pts[i + 1]
+        p3 = pts[i + 2] if i + 2 < n else pts[i + 1]
+        c1x, c1y = p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6
+        c2x, c2y = p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6
+        d += f"C{c1x:.2f},{c1y:.2f} {c2x:.2f},{c2y:.2f} {p2[0]:.2f},{p2[1]:.2f} "
+    return d.strip()
+
+def _smooth_area_d(values, baseline_y):
+    line_d = _smooth_path_d(values)
+    x_last, x_first = _cx(len(values) - 1), _cx(0)
+    return f"{line_d} L{x_last:.2f},{baseline_y:.2f} L{x_first:.2f},{baseline_y:.2f} Z"
 
 def sales_chart_svg():
     baseline_y = _cy(100)
@@ -399,24 +452,33 @@ def sales_chart_svg():
         f'      <text x="{_cx(m):.1f}" y="{CHART_Y1 + 22}" class="chart-axis-label" text-anchor="middle">M{m}</text>'
         for m in (0, 3, 6, 9, 12)
     )
-    lines = ""
-    end_labels = ""
-    dots = ""
+    defs = "\n".join(
+        f"""      <linearGradient id="chart-grad-{s['id']}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" class="chart-grad-stop-start" data-series="{s['id']}"/>
+        <stop offset="100%" class="chart-grad-stop-end" data-series="{s['id']}"/>
+      </linearGradient>"""
+        for s in CHART_SERIES if s["fill"]
+    )
+    areas, lines, end_labels, dots, pings = "", "", "", "", ""
     for s in CHART_SERIES:
-        d = _path_d(s["values"])
+        if s["fill"]:
+            areas += f'      <path d="{_smooth_area_d(s["values"], baseline_y)}" class="chart-area" data-series="{s["id"]}" fill="url(#chart-grad-{s["id"]})" stroke="none"/>\n'
+        d = _smooth_path_d(s["values"])
         lines += f'      <path d="{d}" class="chart-line" data-series="{s["id"]}" fill="none"/>\n'
         first_v, last_v = s["values"][0], s["values"][-1]
         pct = (last_v / first_v - 1) * 100
         pct_str = f"{'+' if pct >= 0 else ''}{pct:.0f}%"
         ex, ey = _cx(12), _cy(last_v)
         dots += f'      <circle cx="{ex:.1f}" cy="{ey:.1f}" r="3.5" class="chart-dot" data-series="{s["id"]}"/>\n'
+        pings += f'      <circle cx="{ex:.1f}" cy="{ey:.1f}" r="3.5" class="chart-ping" data-series="{s["id"]}"/>\n'
         end_labels += (
             f'      <g class="chart-endlabel" data-series="{s["id"]}" transform="translate({ex+10:.1f},{ey:.1f})">'
-            f'<text class="chart-endlabel-pct" dy="-4">{pct_str}</text>'
+            f'<text class="chart-endlabel-pct" data-countup-pct="{pct:.0f}" dy="-4">{pct_str}</text>'
             f'</g>\n'
         )
     legend = "\n".join(
-        f'      <span class="chart-legend-item"><i class="chart-swatch" data-series="{s["id"]}"></i>{s["label"]}</span>'
+        f'      <button type="button" class="chart-legend-item" data-series="{s["id"]}" aria-pressed="false">'
+        f'<i class="chart-swatch" data-series="{s["id"]}"></i>{s["label"]}</button>'
         for s in CHART_SERIES
     )
     table_rows = "\n".join(
@@ -447,11 +509,14 @@ def sales_chart_svg():
       </div>
       <div class="chart-svg-wrap">
         <svg viewBox="0 0 {CHART_VW} {CHART_VH}" class="chart-svg" role="img" aria-label="Indexed revenue, profit and operating cost over a 12-month illustrative engagement" data-chart='{chart_payload}'>
+          <defs>
+{defs}
+          </defs>
           <line x1="{CHART_X0}" y1="{baseline_y:.1f}" x2="{CHART_X1}" y2="{baseline_y:.1f}" class="chart-baseline"/>
           <text x="{CHART_X0}" y="{baseline_y - 8:.1f}" class="chart-axis-label">Start</text>
 {gridlines}
 {x_labels}
-{lines}{dots}{end_labels}
+{areas}{lines}{dots}{pings}{end_labels}
           <line x1="-100" y1="{CHART_Y0}" x2="-100" y2="{CHART_Y1}" class="chart-crosshair"/>
           <circle r="4" class="chart-hover-dot" data-series="revenue" style="opacity:0"/>
           <circle r="4" class="chart-hover-dot" data-series="profit" style="opacity:0"/>
@@ -709,6 +774,36 @@ services_body = """
   </div>
 </section>
 
+<section class="section-alt">
+  <div class="wrap" data-reveal>
+    <div class="section-head">
+      <span class="eyebrow">Specialist capabilities</span>
+      <h2>Where growth needs more than the numbers.</h2>
+      <p>Strategy and financial discipline set the ceiling. These three bring the commercial, digital and experience work that actually pushes a business toward it &mdash; led by people who've held senior roles in each, across private and publicly listed companies.</p>
+    </div>
+    <div class="card-grid-3">
+      <div class="tile">
+        <span class="tag">Specialist</span>
+        <h3>Digital Strategy &amp; Execution</h3>
+        <p>A digital operating model built for the business you actually have, then delivered rather than handed over.</p>
+        <a class="more" href="digital-strategy-execution.html">Explore this service &rarr;</a>
+      </div>
+      <div class="tile">
+        <span class="tag">Specialist</span>
+        <h3>Ecommerce Strategy &amp; Execution</h3>
+        <p>Channel strategy and unit economics that hold together commercially, not just traffic and conversion tactics.</p>
+        <a class="more" href="ecommerce-strategy-execution.html">Explore this service &rarr;</a>
+      </div>
+      <div class="tile">
+        <span class="tag">Specialist</span>
+        <h3>Customer &amp; UX Design</h3>
+        <p>Experience work judged by what it moves in the business, not just how it looks.</p>
+        <a class="more" href="customer-experience-design.html">Explore this service &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="final-cta">
   <div class="wrap">
     <span class="eyebrow">Next step</span>
@@ -724,6 +819,131 @@ write("services", page("services", "Services",
     "Every engagement is tailored. This is the full range we draw from.",
     "Mentec doesn't sell a fixed package. Each partner gets a program of works assembled from these six areas &mdash; starting wherever the business actually needs it.",
     services_body))
+
+# ---------------------------------------------------- SERVICE SUB-PAGES -----
+CREDIBILITY_LINE = "This capability is led by people who have held senior positions across multiple sectors, delivering real growth for both private and publicly listed companies &mdash; judgment that's been tested against real P&amp;Ls, not just frameworks."
+
+def service_subpage_cta(label):
+    return f"""
+<section class="final-cta">
+  <div class="wrap">
+    <span class="eyebrow">Next step</span>
+    <h2>{label}</h2>
+    <div class="hero-ctas">
+      <a href="contact.html" class="btn btn-primary" style="background:#F3F8FB; color:var(--steel-deep);">Book an introductory call</a>
+      <a href="services.html" class="btn btn-ghost">See all services</a>
+    </div>
+  </div>
+</section>
+"""
+
+digital_strategy_body = f"""
+<section class="wrap" data-reveal>
+  <div class="section-head">
+    <span class="eyebrow">What this covers</span>
+    <h2>A digital operating model, not a roadmap slide.</h2>
+    <p>Most digital strategy work stops at a workshop and a deck. This is built the way the rest of Mentec's model is: a plan, then the work of actually running the business through it.</p>
+  </div>
+  <ul class="incl-list">
+    <li>Digital maturity assessment across systems, data and ways of working</li>
+    <li>A technology and platform roadmap sequenced against the commercial plan, not a wish list</li>
+    <li>Digital operating model design: who owns what, how decisions get made, how progress is measured</li>
+    <li>Hands-on execution support through the build and rollout, not just the recommendation</li>
+  </ul>
+  <div class="callout">
+    <p>&ldquo;{CREDIBILITY_LINE}&rdquo;</p>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="wrap" data-reveal>
+    <div class="section-head">
+      <span class="eyebrow">Part of the same model</span>
+      <h2 style="font-size:24px;">Not a report. A partnership.</h2>
+      <p>Like every Mentec engagement, this isn't handed off as a document. It's built into the same equity-aligned partnership as the rest of the work &mdash; so the incentive is the business's enterprise value, not billable hours. <a href="approach.html" class="inline-link">See how the partnership model works &rarr;</a></p>
+    </div>
+  </div>
+</section>
+"""
+write("digital-strategy-execution", page(
+    "digital-strategy-execution", "Digital Strategy &amp; Execution",
+    "A digital operating model that actually gets used.",
+    "Strategy without a digital operating model to run it through stalls at the workshop. This is where the digital side of the business gets built to match the ambition of the rest of it.",
+    digital_strategy_body + service_subpage_cta("Ready to build a digital operating model that gets used?"),
+    parent=("Services", "services"),
+))
+
+ecommerce_strategy_body = f"""
+<section class="wrap" data-reveal>
+  <div class="section-head">
+    <span class="eyebrow">What this covers</span>
+    <h2>Channel growth that holds together commercially.</h2>
+    <p>Channel growth that doesn't hold together commercially isn't growth &mdash; it's deferred risk. This service keeps strategy and unit economics in the same room.</p>
+  </div>
+  <ul class="incl-list">
+    <li>Channel and marketplace strategy sequenced by margin and capacity, not just opportunity size</li>
+    <li>Unit economics and contribution margin by channel, product and cohort</li>
+    <li>Conversion, retention and lifetime value roadmap tied to the financial plan</li>
+    <li>Integration with cash flow and reporting, so growth doesn't outrun working capital</li>
+  </ul>
+  <div class="callout">
+    <p>&ldquo;{CREDIBILITY_LINE}&rdquo;</p>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="wrap" data-reveal>
+    <div class="section-head">
+      <span class="eyebrow">Proof, not theory</span>
+      <h2 style="font-size:24px;">Done inside real ecommerce businesses.</h2>
+      <p>Mentec's partners include <a href="case-studies.html#buyerscircle" class="inline-link">BuyersCircle</a>, a social e-commerce platform where this work reshaped the funding model and investment proposition, and <a href="case-studies.html#brandmarkets" class="inline-link">BrandMarkets</a>, a multi-category ecommerce retailer. <a href="case-studies.html" class="inline-link">Read the case studies &rarr;</a></p>
+    </div>
+  </div>
+</section>
+"""
+write("ecommerce-strategy-execution", page(
+    "ecommerce-strategy-execution", "Ecommerce Strategy &amp; Execution",
+    "Ecommerce strategy built on unit economics, not just traffic.",
+    "Channel growth that doesn't hold together commercially isn't growth &mdash; it's deferred risk. This service keeps the two in the same room.",
+    ecommerce_strategy_body + service_subpage_cta("Ready to make the channel strategy hold together commercially?"),
+    parent=("Services", "services"),
+))
+
+cx_design_body = f"""
+<section class="wrap" data-reveal>
+  <div class="section-head">
+    <span class="eyebrow">What this covers</span>
+    <h2>Experience work judged by what it moves.</h2>
+    <p>Good UX is a commercial lever, not a finishing touch. This service ties experience work directly to the metrics that matter to the business.</p>
+  </div>
+  <ul class="incl-list">
+    <li>Experience and usability audit across the core customer journey</li>
+    <li>Journey mapping tied to commercial drop-off points, not just friction</li>
+    <li>UX and service design roadmap, sequenced by expected impact</li>
+    <li>A measurement framework linking experience changes to revenue, retention and conversion</li>
+  </ul>
+  <div class="callout">
+    <p>&ldquo;{CREDIBILITY_LINE}&rdquo;</p>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="wrap" data-reveal>
+    <div class="section-head">
+      <span class="eyebrow">Part of the same model</span>
+      <h2 style="font-size:24px;">Design tied to the numbers, not separate from them.</h2>
+      <p>Experience recommendations are prioritised the same way the rest of a Mentec plan is &mdash; by expected commercial impact, sequenced into a plan Mentec stays to help deliver. <a href="approach.html" class="inline-link">See how the partnership model works &rarr;</a></p>
+    </div>
+  </div>
+</section>
+"""
+write("customer-experience-design", page(
+    "customer-experience-design", "Customer &amp; UX Design",
+    "Customer and user experience design, tied to commercial outcomes.",
+    "Experience work judged by what it moves in the business, not just how it looks.",
+    cx_design_body + service_subpage_cta("Ready to tie experience work to the numbers?"),
+    parent=("Services", "services"),
+))
 
 # ------------------------------------------------------------ APPROACH -----
 approach_body = """
