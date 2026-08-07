@@ -140,10 +140,12 @@ DESCRIPTIONS = {
 }
 
 COMPANY_PAGES = {"approach", "case-studies", "clients", "about"}
+SERVICES_PAGES = {"services", "digital-strategy-execution", "ecommerce-strategy-execution", "customer-experience-design"}
 
 def nav_html(active):
     def cls(slug):
         return "navbtn current" if slug == active else "navbtn"
+    services_cls = "navbtn current" if active in SERVICES_PAGES else "navbtn"
     company_cls = "navbtn current" if active in COMPANY_PAGES else "navbtn"
     return f"""<header class="site">
   <div class="wrap nav">
@@ -156,7 +158,24 @@ def nav_html(active):
     </a>
 
     <nav class="navmid" id="desktopNav">
-      <a href="services.html" class="{cls('services')}">Services</a>
+      <div class="navitem" data-group="services">
+        <button class="{services_cls}" aria-expanded="false">Services <span class="caret">&#9662;</span></button>
+        <div class="mega" id="mega-services">
+          <div class="mega-links">
+            <a class="mega-link" href="services.html"><span class="code">01</span><span class="name">All Services</span><span class="desc">CFO leadership, strategy, execution &mdash; the full range.</span></a>
+            <a class="mega-link" href="digital-strategy-execution.html"><span class="code">02</span><span class="name">Digital Strategy &amp; Execution</span><span class="desc">A digital operating model that gets used.</span></a>
+            <a class="mega-link" href="ecommerce-strategy-execution.html"><span class="code">03</span><span class="name">Ecommerce Strategy &amp; Execution</span><span class="desc">Channel growth built on unit economics.</span></a>
+            <a class="mega-link" href="customer-experience-design.html"><span class="code">04</span><span class="name">Customer &amp; UX Design</span><span class="desc">Experience work tied to commercial outcomes.</span></a>
+          </div>
+          <div class="mega-promo">
+            <div>
+              <span class="eyebrow">Not sure where to start</span>
+              <p>&ldquo;Most partners start with one problem. The engagement usually grows from there.&rdquo;</p>
+            </div>
+            <a href="contact.html" class="btn btn-ghost" style="align-self:flex-start;">Book a call</a>
+          </div>
+        </div>
+      </div>
       <div class="navitem" data-group="company">
         <button class="{company_cls}" aria-expanded="false">Company <span class="caret">&#9662;</span></button>
         <div class="mega" id="mega-company">
@@ -185,7 +204,11 @@ def nav_html(active):
     </div>
   </div>
   <div class="wrap mobile-panel" id="mobilePanel">
-    <a href="services.html">Services</a>
+    <div class="mobile-group-label">Services</div>
+    <a href="services.html">All Services</a>
+    <a href="digital-strategy-execution.html">Digital Strategy &amp; Execution</a>
+    <a href="ecommerce-strategy-execution.html">Ecommerce Strategy &amp; Execution</a>
+    <a href="customer-experience-design.html">Customer &amp; UX Design</a>
     <div class="mobile-group-label">Company</div>
     <a href="approach.html">Approach</a>
     <a href="case-studies.html">Case Studies</a>
