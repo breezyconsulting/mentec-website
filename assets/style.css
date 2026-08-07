@@ -133,7 +133,7 @@ header.site{position:sticky; top:0; z-index:100; background:color-mix(in srgb, v
 
 .mobile-panel{display:none; flex-direction:column; padding:10px 0 20px; border-top:1px solid var(--line);}
 .mobile-panel.open{display:flex;}
-.mobile-panel a{padding:12px 4px; text-decoration:none; color:var(--text); font-size:15px; border-bottom:1px solid var(--line); font-weight:600;}
+.mobile-panel a{padding:12px 4px; text-decoration:none; color:var(--text); font-size:15px; border-bottom:1px solid var(--line); font-weight:700;}
 .mobile-group-label{font-family:ui-monospace,monospace; font-size:11px; color:var(--slate); text-transform:uppercase; letter-spacing:0.1em; padding:14px 4px 4px;}
 
 /* ---------- PAGE HEADER BAND ---------- */
