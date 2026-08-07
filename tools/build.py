@@ -258,7 +258,8 @@ def head(slug):
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
 <link rel="shortcut icon" href="assets/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-<link rel="stylesheet" href="assets/style.css">{HEAD_EXTRA.get(slug,"")}
+<link rel="stylesheet" href="assets/style.css">
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>{HEAD_EXTRA.get(slug,"")}
 </head>
 <body>
 """
