@@ -399,6 +399,19 @@ section{padding:80px 0;}
 .industries-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;}
 .industry-chip{font-family:ui-monospace,monospace; font-size:12px; letter-spacing:0.04em; padding:8px 14px; border:1px solid var(--line); color:var(--text-soft);}
 
+/* ---------- FAQ ---------- */
+.faq-list{border-top:1px solid var(--line);}
+.faq-item{border-bottom:1px solid var(--line);}
+.faq-item summary{
+  padding:22px 0; cursor:pointer; list-style:none;
+  display:flex; justify-content:space-between; align-items:center; gap:20px;
+  font-size:17px; font-family:Iowan Old Style, Georgia, serif; color:var(--ink);
+}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{content:"+"; font-family:ui-monospace,monospace; font-size:20px; color:var(--steel); flex-shrink:0;}
+.faq-item[open] summary::after{content:"\2212";}
+.faq-item .a{padding:0 0 24px; max-width:70ch; font-size:15.5px;}
+
 /* ---------- ABOUT ---------- */
 .about-grid{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start;}
 @media (max-width:800px){.about-grid{grid-template-columns:1fr;}}

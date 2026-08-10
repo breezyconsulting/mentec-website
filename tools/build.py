@@ -113,27 +113,27 @@ SLUG_DIR = {
 }
 SLUG_TO_FILE = {slug: (d + "/index.html" if d != "." else "index.html") for slug, d in SLUG_DIR.items()}
 TITLES = {
-    "home": "Mentec Business Advisory | CFO-Calibre Leadership for Growing SMEs",
-    "services": "Services | CFO Leadership, Strategy & Execution — Mentec Business Advisory",
+    "home": "Virtual CFO Services Sydney | Mentec Business Advisory",
+    "services": "Virtual CFO & Business Advisory Services | Mentec Business Advisory",
     "approach": "Our Approach | Strategise, Plan, Execute — Mentec Business Advisory",
     "case-studies": "Case Studies | Real Partner Results — Mentec Business Advisory",
     "clients": "Clients | Who We Partner With — Mentec Business Advisory",
-    "about": "About | Joe Siric & the Mentec Story — Mentec Business Advisory",
-    "insights": "Insights | CFO & Business Advisory Articles — Mentec Business Advisory",
-    "contact": "Contact | Book an Introductory Call — Mentec Business Advisory",
+    "about": "About | Joe Siric, Virtual CFO & Founder — Mentec Business Advisory",
+    "insights": "Insights | Virtual CFO & Business Advisory Articles — Mentec",
+    "contact": "Contact | Book a Virtual CFO Introductory Call — Mentec, Sydney",
     "digital-strategy-execution": "Digital Strategy & Execution — Mentec Business Advisory",
     "ecommerce-strategy-execution": "Ecommerce Strategy & Execution — Mentec Business Advisory",
     "customer-experience-design": "Customer & User Experience Design — Mentec Business Advisory",
 }
 DESCRIPTIONS = {
-    "home": "Mentec pairs 30+ years of senior CFO experience with an equity-aligned partnership model for ambitious Australian SMEs — strategy, planning and hands-on execution.",
-    "services": "CFO Leadership, Strategic Planning, Financial Management, Execution & Delivery, Enterprise Value & Growth, and Due Diligence — six services, tailored per partner.",
+    "home": "Virtual CFO leadership and an equity-aligned partnership for ambitious Sydney and Australia-wide SMEs — 30+ years of senior CFO experience, from strategy through to hands-on execution.",
+    "services": "CFO leadership (virtual/fractional), strategic planning, financial management and execution — six services for SMEs, tailored per partner. Based in Sydney, working Australia-wide.",
     "approach": "Why Mentec takes an equity position instead of billing by the hour, and how a partnership moves from strategy to a delivered, working plan.",
     "case-studies": "How Mentec's partnership model has worked in practice for Siric Architects, BuyersCircle, Excitation, COAX and BrandMarkets.",
     "clients": "Who Mentec partners with, the sectors we work in, and the SME businesses we've worked alongside.",
-    "about": "Founder Joe Siric spent his career as a CFO before founding Mentec Business Advisory. The story, credentials and pillars behind the partnership model.",
-    "insights": "Field notes on CFO-level financial management, enterprise value and strategic planning for SME business owners.",
-    "contact": "Book a 20-minute introductory call with Mentec Business Advisory, or reach us directly by phone or email.",
+    "about": "Founder Joe Siric spent his career as a CFO before founding Mentec — providing the kind of senior leadership known as a virtual or fractional CFO, structured as a partnership.",
+    "insights": "Field notes on virtual CFO leadership, financial management, enterprise value and strategic planning for Australian SME owners.",
+    "contact": "Book a 20-minute introductory call with Mentec Business Advisory in Norwest, Sydney — or reach us directly by phone or email.",
     "digital-strategy-execution": "Digital transformation roadmaps and hands-on execution, led by a team with senior digital leadership experience across private and public companies.",
     "ecommerce-strategy-execution": "Ecommerce channel strategy, unit economics and execution support, grounded in senior ecommerce leadership across private and public companies.",
     "customer-experience-design": "Customer and user experience design tied to commercial outcomes, led by a team with senior CX/UX leadership across private and public companies.",
@@ -281,7 +281,8 @@ HEAD_EXTRA = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     "name": "Mentec Business Advisory",
-    "description": "CFO-calibre strategy, planning and execution for ambitious SME businesses, delivered through an equity-aligned partnership model.",
+    "alternateName": "Mentec Virtual CFO Services",
+    "description": "Virtual CFO leadership, strategy, planning and execution for ambitious SME businesses, delivered through an equity-aligned partnership model.",
     "email": "joe.siric@mentec.com.au",
     "telephone": "+61414674353",
     "address": {
@@ -293,7 +294,8 @@ HEAD_EXTRA = {
       "addressCountry": "AU"
     },
     "founder": { "@type": "Person", "name": "Joe Siric" },
-    "areaServed": "AU"
+    "areaServed": ["Norwest NSW", "Hills District NSW", "Sydney", "New South Wales", "Australia"],
+    "knowsAbout": ["Virtual CFO Services", "Fractional CFO Services", "CFO Leadership", "Strategic Planning", "Financial Management", "Enterprise Value Growth"]
   }
   </script>"""
 }
@@ -570,7 +572,7 @@ home_body = f"""
     <div>
       <span class="eyebrow">Corporate &middot; Business &middot; Operations Advisory</span>
       <h1 data-reveal>CFO-calibre leadership for businesses ready to <em>outgrow themselves.</em></h1>
-      <p class="lede">Mentec pairs 30+ years of senior CFO experience with a partnership most advisors won't offer: an equity position alongside a reduced retainer, so our incentive is your enterprise value &mdash; not billable hours. We don't hand over a strategy and leave. We stay and execute it with you.</p>
+      <p class="lede">Mentec provides virtual CFO leadership for ambitious Sydney and Australia-wide SMEs &mdash; pairing 30+ years of senior CFO experience with a partnership most advisors won't offer: an equity position alongside a reduced retainer, so our incentive is your enterprise value, not billable hours. We don't hand over a strategy and leave. We stay and execute it with you.</p>
       <div class="hero-ctas">
         <a href="contact.html" class="btn btn-primary">Book an introductory call</a>
         <a href="approach.html" class="btn btn-ghost">See how we work</a>
@@ -732,12 +734,58 @@ home_body = f"""
 write("home", head("home") + nav_html("home") + home_body + footer_html() + FOOT)
 
 # ------------------------------------------------------------ SERVICES -----
-services_body = """
+SERVICES_FAQ = [
+    ("Is Mentec a virtual CFO service?",
+     "Yes &mdash; Mentec provides the same calibre of senior financial leadership as a virtual or fractional CFO, structured as an equity-aligned partnership rather than a straightforward hourly rate or fixed retainer."),
+    ("What's the difference between a virtual CFO and a fractional CFO?",
+     "In Australia the terms are largely used interchangeably to describe senior, part-time CFO-level leadership. Mentec's model goes a step further: alongside that leadership, we take a position in the business and stay to help execute the plan, not just advise on it."),
+    ("Do you only work with businesses in Sydney?",
+     "Mentec is based in Norwest, in Sydney's Hills District, and partners with SME businesses Australia-wide."),
+    ("What size or stage of business is this for?",
+     "SME businesses with an innovative or unique offering and a strong, proven commercial model already generating revenue &mdash; not early-stage ideas still finding a model."),
+    ("How is Mentec paid?",
+     "Through an equity position in the partner business alongside a retainer that's substantially lower than a standalone consulting fee. See the <a href=\"approach.html\" class=\"inline-link\">Approach page</a> for the full detail."),
+    ("Do you only advise, or do you actually get involved?",
+     "Both. Mentec builds the plan, then works inside the business to drive delivery &mdash; reporting, cash discipline, and the commercial decisions that determine whether the plan actually happens."),
+]
+
+def services_faq_html():
+    items = ""
+    for q, a in SERVICES_FAQ:
+        items += f"""    <details class="faq-item">
+      <summary>{q}</summary>
+      <div class="a"><p>{a}</p></div>
+    </details>
+"""
+    return items
+
+def _faq_plain(html_text):
+    """Strip markup/entities for FAQPage schema text (kept in sync with the
+    visible SERVICES_FAQ copy above, not hand-duplicated)."""
+    t = re.sub(r'<[^>]+>', '', html_text)
+    return t.replace('&mdash;', '—').replace('&amp;', '&')
+
+HEAD_EXTRA["services"] = """
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+""" + ",\n".join(
+    "      {\"@type\": \"Question\", \"name\": " + json.dumps(q) +
+    ", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": " + json.dumps(_faq_plain(a)) + "}}"
+    for q, a in SERVICES_FAQ
+) + """
+    ]
+  }
+  </script>"""
+
+services_body = f"""
 <section class="wrap">
   <div class="service-block" data-reveal id="cfo">
     <div class="svc-head"><span class="svc-code-big">CFO &mdash; 01</span><h3>CFO Leadership</h3><span class="best-for">Best for: businesses making real decisions without a finance voice in the room</span></div>
     <div>
-      <p class="desc">On-call, senior financial leadership without carrying a full-time seat. A member of the Australian Society of Certified Professional Accountants with 30+ years of experience, sitting at the table when it matters.</p>
+      <p class="desc">On-call, senior financial leadership without carrying a full-time seat &mdash; the role sometimes called a virtual CFO or fractional CFO. Mentec's version comes with an equity-aligned partnership, not just an hourly rate. A member of the Australian Society of Certified Professional Accountants with 30+ years of experience, sitting at the table when it matters.</p>
       <ul class="incl-list">
         <li>Board packs and management reporting on a regular cadence</li>
         <li>Lender and investor-ready reporting when capital conversations start</li>
@@ -841,6 +889,15 @@ services_body = """
       </div>
     </div>
   </div>
+</section>
+
+<section class="wrap" data-reveal>
+  <div class="section-head">
+    <span class="eyebrow">FAQ</span>
+    <h2>Questions worth asking before you engage anyone.</h2>
+  </div>
+  <div class="faq-list">
+{services_faq_html()}  </div>
 </section>
 
 <section class="final-cta">
@@ -1183,7 +1240,7 @@ about_body = """
       <span class="eyebrow">Our story</span>
       <h2 style="margin-top:16px; font-size:clamp(24px,3vw,32px);">Why Mentec exists.</h2>
       <p style="margin-top:20px; font-size:16px;">Before founding Mentec, Joe Siric spent his career as CFO across a number of corporations, providing strategic and professional finance leadership at the executive table. That work made one thing clear: strong business relationships, not just strong numbers, are what set the foundation for lasting success.</p>
-      <p style="margin-top:16px; font-size:16px;">Mentec Business Advisory was established to give small to medium-sized enterprises with an innovative or distinctive idea access to that same calibre of strategic leadership and financial rigour &mdash; structured as a genuine partnership, not another consulting invoice.</p>
+      <p style="margin-top:16px; font-size:16px;">Mentec Business Advisory was established to give small to medium-sized enterprises with an innovative or distinctive idea access to that same calibre of strategic leadership and financial rigour &mdash; the kind of senior support often described as a virtual CFO or fractional CFO &mdash; structured as a genuine partnership, not another consulting invoice.</p>
       <p style="margin-top:16px; font-size:16px;">Mentec creates a tailored strategy for each partner, then stays inside the business to help deliver it &mdash; learning from what's worked and what hasn't, so the blueprint fits the business in front of us rather than a template pulled off the shelf.</p>
     </div>
     <div class="founder-card">
@@ -1232,8 +1289,8 @@ insights_body = """
     <div class="insight-card"><span class="cat">Cash &amp; reporting</span><h4>The lender-ready report most SMEs don't have until it's too late</h4><p>What board- and bank-grade reporting actually requires.</p></div>
     <div class="insight-card"><span class="cat">Partnership model</span><h4>Why an equity-aligned advisor behaves differently to an hourly one</h4><p>The incentive problem at the heart of most consulting engagements.</p></div>
     <div class="insight-card"><span class="cat">Strategy</span><h4>The difference between a strategy document and a deliverable plan</h4><p>Turning a workshop's worth of ideas into owners, milestones and targets.</p></div>
-    <div class="insight-card"><span class="cat">Due diligence</span><h4>What a due diligence review catches that founders usually miss</h4><p>Common blind spots before a raise, sale or major partnership.</p></div>
-    <div class="insight-card"><span class="cat">Growth</span><h4>When a business has outgrown a bookkeeper but not yet earned a CFO</h4><p>The access gap this whole firm exists to close.</p></div>
+    <div class="insight-card"><span class="cat">Virtual CFO</span><h4>Virtual CFO vs fractional CFO: same job, different word?</h4><p>What the terms actually mean in Australia, and where Mentec's model differs from both.</p></div>
+    <div class="insight-card"><span class="cat">Virtual CFO</span><h4>Virtual CFO vs accountant: what founders get wrong</h4><p>Compliance and strategy are different jobs. Most SMEs only have one of them covered.</p></div>
   </div>
 </section>
 
@@ -1279,7 +1336,7 @@ contact_body = f"""
 """
 write("contact", page("contact", "Contact",
     "Start with a 20-minute introductory call.",
-    "No pitch deck required. We'll talk about the business, where it's stuck, and whether Mentec's model is actually a fit.",
+    "No pitch deck required. We'll talk about the business, where it's stuck, and whether Mentec's model is actually a fit &mdash; based in Norwest, Sydney, working with SME partners Australia-wide.",
     contact_body))
 
 print("done: all pages")
