@@ -636,7 +636,7 @@ home_body = f"""
   <div class="section-head">
     <span class="eyebrow">Additional Services</span>
     <h2>Growth needs more than the numbers.</h2>
-    <p>Financial rigour sets the ceiling. These three push a business toward it &mdash; led by people who've held senior roles in each, across private and publicly listed companies.</p>
+    <p>Financial rigour sets the ceiling. The following three push a business toward it &mdash; led by people who've held senior roles in each, across private and publicly listed companies.</p>
   </div>
   <div class="card-grid-3">
     <div class="tile"><span class="tag">Specialist</span><h3>Digital Strategy &amp; Execution</h3><p>A digital operating model built for the business you have, then delivered.</p><a class="more" href="digital-strategy-execution.html">Explore this service &rarr;</a></div>
