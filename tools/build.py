@@ -83,7 +83,7 @@ TESTIMONIALS = [
     },
     {
         "quote": "Having someone with equity in the outcome changes the conversation. It stopped feeling like billable hours and started feeling like a partner.",
-        "name": "Joel", "title": "Director", "company": "COAX",
+        "name": "Joel Fuller", "title": "Director", "company": "COAX",
     },
 ]
 
