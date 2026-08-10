@@ -162,7 +162,7 @@ def nav_html(active):
         <button class="{services_cls}" aria-expanded="false">Services <span class="caret">&#9662;</span></button>
         <div class="mega" id="mega-services">
           <div class="mega-links">
-            <a class="mega-link" href="services.html"><span class="code">01</span><span class="name">All Services</span><span class="desc">CFO leadership, strategy, execution &mdash; the full range.</span></a>
+            <a class="mega-link" href="services.html"><span class="code">01</span><span class="name">CFO Services</span><span class="desc">CFO leadership, strategy, execution &mdash; the full range.</span></a>
             <a class="mega-link" href="digital-strategy-execution.html"><span class="code">02</span><span class="name">Digital Strategy &amp; Execution</span><span class="desc">A digital operating model that gets used.</span></a>
             <a class="mega-link" href="ecommerce-strategy-execution.html"><span class="code">03</span><span class="name">Ecommerce Strategy &amp; Execution</span><span class="desc">Channel growth built on unit economics.</span></a>
             <a class="mega-link" href="customer-experience-design.html"><span class="code">04</span><span class="name">Customer &amp; UX Design</span><span class="desc">Experience work tied to commercial outcomes.</span></a>
@@ -205,7 +205,7 @@ def nav_html(active):
   </div>
   <div class="wrap mobile-panel" id="mobilePanel">
     <div class="mobile-group-label">Services</div>
-    <a href="services.html">All Services</a>
+    <a href="services.html">CFO Services</a>
     <a href="digital-strategy-execution.html">Digital Strategy &amp; Execution</a>
     <a href="ecommerce-strategy-execution.html">Ecommerce Strategy &amp; Execution</a>
     <a href="customer-experience-design.html">Customer &amp; UX Design</a>
@@ -479,21 +479,24 @@ def sales_chart_svg():
         f"""      <linearGradient id="chart-grad-{s['id']}" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" class="chart-grad-stop-start" data-series="{s['id']}"/>
         <stop offset="100%" class="chart-grad-stop-end" data-series="{s['id']}"/>
-      </linearGradient>"""
+      </linearGradient>
+      <clipPath id="chart-clip-{s['id']}"><rect class="chart-clip-rect" data-series="{s['id']}" x="{CHART_X0}" y="0" width="0" height="{CHART_VH}"/></clipPath>"""
         for s in CHART_SERIES if s["fill"]
     )
-    areas, lines, end_labels, dots, pings = "", "", "", "", ""
+    areas, lines, end_labels, dots, pings, tips = "", "", "", "", "", ""
     for s in CHART_SERIES:
         if s["fill"]:
-            areas += f'      <path d="{_smooth_area_d(s["values"], baseline_y)}" class="chart-area" data-series="{s["id"]}" fill="url(#chart-grad-{s["id"]})" stroke="none"/>\n'
+            areas += f'      <path d="{_smooth_area_d(s["values"], baseline_y)}" class="chart-area" data-series="{s["id"]}" fill="url(#chart-grad-{s["id"]})" stroke="none" clip-path="url(#chart-clip-{s["id"]})"/>\n'
         d = _smooth_path_d(s["values"])
         lines += f'      <path d="{d}" class="chart-line" data-series="{s["id"]}" fill="none"/>\n'
         first_v, last_v = s["values"][0], s["values"][-1]
         pct = (last_v / first_v - 1) * 100
         pct_str = f"{'+' if pct >= 0 else ''}{pct:.0f}%"
+        sx, sy = _cx(0), _cy(first_v)
         ex, ey = _cx(12), _cy(last_v)
         dots += f'      <circle cx="{ex:.1f}" cy="{ey:.1f}" r="3.5" class="chart-dot" data-series="{s["id"]}"/>\n'
         pings += f'      <circle cx="{ex:.1f}" cy="{ey:.1f}" r="3.5" class="chart-ping" data-series="{s["id"]}"/>\n'
+        tips += f'      <circle cx="{sx:.1f}" cy="{sy:.1f}" r="4.5" class="chart-tip" data-series="{s["id"]}"/>\n'
         end_labels += (
             f'      <g class="chart-endlabel" data-series="{s["id"]}" transform="translate({ex+10:.1f},{ey:.1f})">'
             f'<text class="chart-endlabel-pct" data-countup-pct="{pct:.0f}" dy="-4">{pct_str}</text>'
@@ -539,7 +542,7 @@ def sales_chart_svg():
           <text x="{CHART_X0}" y="{baseline_y - 8:.1f}" class="chart-axis-label">Start</text>
 {gridlines}
 {x_labels}
-{areas}{lines}{dots}{pings}{end_labels}
+{areas}{lines}{dots}{pings}{end_labels}{tips}
           <line x1="-100" y1="{CHART_Y0}" x2="-100" y2="{CHART_Y1}" class="chart-crosshair"/>
           <circle r="4" class="chart-hover-dot" data-series="revenue" style="opacity:0"/>
           <circle r="4" class="chart-hover-dot" data-series="profit" style="opacity:0"/>
@@ -624,6 +627,19 @@ home_body = f"""
       <div class="tile"><span class="tag">VAL</span><h3>Enterprise Value</h3><p>The moves that raise what the business is worth.</p></div>
       <div class="tile"><span class="tag">DD</span><h3>Due Diligence &amp; Risk</h3><p>Risk flagged early, before it's expensive.</p></div>
     </div>
+  </div>
+</section>
+
+<section class="wrap" data-reveal>
+  <div class="section-head">
+    <span class="eyebrow">Additional Services</span>
+    <h2>Growth needs more than the numbers.</h2>
+    <p>Financial rigour sets the ceiling. These three push a business toward it &mdash; led by people who've held senior roles in each, across private and publicly listed companies.</p>
+  </div>
+  <div class="card-grid-3">
+    <div class="tile"><span class="tag">Specialist</span><h3>Digital Strategy &amp; Execution</h3><p>A digital operating model built for the business you have, then delivered.</p><a class="more" href="digital-strategy-execution.html">Explore this service &rarr;</a></div>
+    <div class="tile"><span class="tag">Specialist</span><h3>Ecommerce Strategy &amp; Execution</h3><p>Channel strategy and unit economics that hold together commercially.</p><a class="more" href="ecommerce-strategy-execution.html">Explore this service &rarr;</a></div>
+    <div class="tile"><span class="tag">Specialist</span><h3>Customer &amp; UX Design</h3><p>Experience work judged by what it moves in the business.</p><a class="more" href="customer-experience-design.html">Explore this service &rarr;</a></div>
   </div>
 </section>
 

@@ -41,50 +41,88 @@ setTimeout(function(){
   }, {threshold:0.5}) : null;
   countEls.forEach(function(el){ if(countIo){ countIo.observe(el); } });
 
-  // impact chart: draw-in animation, animated end-labels, a "live" ping once
-  // drawn, hover tooltip/crosshair, and an interactive legend (hover to
-  // spotlight a series, click to toggle it off).
+  // impact chart: draw-in animation (a "pen tip" leads each line, area fills
+  // wipe in sync), animated end-labels, a "live" ping once drawn, hover
+  // tooltip/crosshair, and an interactive legend (hover to spotlight a
+  // series, click to toggle it off).
   document.querySelectorAll('.chart-card').forEach(function(card){
-    var drawn = false;
-    function draw(){
-      if(drawn) return;
-      drawn = true;
-      var paths = card.querySelectorAll('.chart-line');
-      var maxDelay = 0;
-      if(reduceMotion){
-        card.classList.add('drawn', 'no-anim');
-      } else {
-        paths.forEach(function(path, i){
-          var len = path.getTotalLength();
-          path.style.strokeDasharray = len;
-          path.style.strokeDashoffset = len;
-          path.getBoundingClientRect(); // force reflow so the transition catches the offset change
-          requestAnimationFrame(function(){ path.style.strokeDashoffset = 0; });
-          maxDelay = Math.max(maxDelay, i * 150);
-        });
-        card.classList.add('drawn');
-      }
-      card.querySelectorAll('.chart-endlabel-pct[data-countup-pct]').forEach(function(el){
-        var target = parseFloat(el.getAttribute('data-countup-pct'));
-        animateNumber(target, 1300 + maxDelay, function(v){
-          el.textContent = (v >= 0 ? '+' : '') + Math.round(v) + '%';
-        });
-      });
-      // start the "live" ping once the slowest line has finished drawing
-      setTimeout(function(){ card.classList.add('pinging'); }, reduceMotion ? 0 : 1300 + maxDelay);
-    }
-    if('IntersectionObserver' in window){
-      var cio = new IntersectionObserver(function(entries){
-        entries.forEach(function(e){ if(e.isIntersecting){ draw(); cio.unobserve(e.target); } });
-      }, {threshold:0.35});
-      cio.observe(card);
-    } else { draw(); }
-
     var svg = card.querySelector('.chart-svg');
     if(!svg) return;
     var raw = svg.getAttribute('data-chart');
     if(!raw) return;
     var data = JSON.parse(raw);
+    var DRAW_MS = 1500, STAGGER_MS = 220;
+
+    var drawn = false;
+    function draw(){
+      if(drawn) return;
+      drawn = true;
+      var series = ['revenue', 'profit', 'cost'];
+      var xSpan = data.x1 - data.x0;
+      var maxDelay = (series.length - 1) * STAGGER_MS;
+
+      function revealSeries(id){
+        var dot = svg.querySelector('.chart-dot[data-series="' + id + '"]');
+        var label = svg.querySelector('.chart-endlabel[data-series="' + id + '"]');
+        if(dot) dot.classList.add('revealed');
+        if(label) label.classList.add('revealed');
+        var pct = label && label.querySelector('.chart-endlabel-pct[data-countup-pct]');
+        if(pct){
+          var target = parseFloat(pct.getAttribute('data-countup-pct'));
+          animateNumber(target, reduceMotion ? 0 : 550, function(v){
+            pct.textContent = (v >= 0 ? '+' : '') + Math.round(v) + '%';
+          });
+        }
+      }
+
+      if(reduceMotion){
+        card.classList.add('drawn', 'no-anim');
+        svg.querySelectorAll('.chart-clip-rect').forEach(function(r){ r.setAttribute('width', xSpan); });
+        series.forEach(revealSeries);
+      } else {
+        card.classList.add('drawn');
+        series.forEach(function(id, i){
+          var path = svg.querySelector('.chart-line[data-series="' + id + '"]');
+          var tip = svg.querySelector('.chart-tip[data-series="' + id + '"]');
+          var clipRect = svg.querySelector('.chart-clip-rect[data-series="' + id + '"]');
+          if(!path) return;
+          var len = path.getTotalLength();
+          path.style.strokeDasharray = len;
+          path.style.strokeDashoffset = len;
+          setTimeout(function(){
+            if(tip) tip.style.opacity = 1;
+            var start = null;
+            function tick(ts){
+              if(start === null) start = ts;
+              var p = Math.min((ts - start) / DRAW_MS, 1);
+              var eased = 1 - Math.pow(1 - p, 3); // ease-out-cubic
+              path.style.strokeDashoffset = String(len * (1 - eased));
+              if(tip){
+                var pt = path.getPointAtLength(len * eased);
+                tip.setAttribute('cx', pt.x);
+                tip.setAttribute('cy', pt.y);
+              }
+              if(clipRect) clipRect.setAttribute('width', String(eased * xSpan));
+              if(p < 1){ requestAnimationFrame(tick); }
+              else {
+                if(tip) tip.style.opacity = 0;
+                revealSeries(id);
+              }
+            }
+            requestAnimationFrame(tick);
+          }, i * STAGGER_MS);
+        });
+      }
+      // start the "live" ping once the slowest line has finished drawing
+      setTimeout(function(){ card.classList.add('pinging'); }, reduceMotion ? 0 : DRAW_MS + maxDelay);
+    }
+    if('IntersectionObserver' in window){
+      var cio = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting){ draw(); cio.unobserve(e.target); } });
+      }, {threshold:0.3});
+      cio.observe(card);
+    } else { draw(); }
+
     var wrap = card.querySelector('.chart-svg-wrap');
     var tooltip = card.querySelector('.chart-tooltip');
     var crosshair = svg.querySelector('.chart-crosshair');
