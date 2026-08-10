@@ -856,6 +856,7 @@ services_body = f"""
         <li>Risk identification ahead of a funding, partnership, or growth decision</li>
         <li>Plain-language findings, not a compliance report nobody reads</li>
         <li>A clear view of what needs fixing before it's someone else's discovery</li>
+        <li>For digital-first and ecommerce businesses, a review of tech stack, channel economics and customer data health alongside the financials</li>
       </ul>
     </div>
   </div>
@@ -981,6 +982,7 @@ ecommerce_strategy_body = f"""
     <li>Unit economics and contribution margin by channel, product and cohort</li>
     <li>Conversion, retention and lifetime value roadmap tied to the financial plan</li>
     <li>Integration with cash flow and reporting, so growth doesn't outrun working capital</li>
+    <li>Retail media investment and joint business planning with major retail partners &mdash; spend that's tied to a return, not a line item</li>
   </ul>
   <div class="callout">
     <p>&ldquo;{CREDIBILITY_LINE}&rdquo;</p>
@@ -1017,6 +1019,7 @@ cx_design_body = f"""
     <li>Journey mapping tied to commercial drop-off points, not just friction</li>
     <li>UX and service design roadmap, sequenced by expected impact</li>
     <li>A measurement framework linking experience changes to revenue, retention and conversion</li>
+    <li>Customer data and loyalty program design, connected to retention and lifetime-value economics &mdash; not run as a marketing side-project</li>
   </ul>
   <div class="callout">
     <p>&ldquo;{CREDIBILITY_LINE}&rdquo;</p>
