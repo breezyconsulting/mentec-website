@@ -420,12 +420,21 @@ section{padding:80px 0;}
 .credential-list{list-style:none; margin:20px 0 0; padding:0; display:flex; flex-direction:column; gap:10px;}
 .credential-list li{font-size:14.5px; color:var(--text-soft); display:flex; gap:10px;}
 .credential-list li::before{content:"—"; color:var(--steel);}
-.pillar-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:20px;}
-@media (max-width:800px){.pillar-grid{grid-template-columns:repeat(2,1fr);}}
-.pillar{background:var(--paper); padding:24px 20px;}
-.pillar .n{font-family:Iowan Old Style, Georgia, serif; font-style:italic; color:var(--mist); font-size:22px;}
-.pillar h4{font-size:15.5px; margin-top:10px;}
-.pillar p{font-size:13px; margin-top:8px;}
+/* ---------- BUSINESS PILLARS DIAGRAM ---------- */
+.pillars-diagram{margin-top:32px;}
+.pd-svg{width:100%; height:auto; display:block; overflow:visible;}
+.pd-node{fill:var(--paper-raised); stroke:var(--steel); stroke-width:1.5;}
+.pd-node-n{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:17px; font-weight:600; fill:var(--steel);}
+.pd-flow{stroke:var(--steel); stroke-width:1.5; opacity:0.55;}
+.pd-flow-head{fill:none; stroke:var(--steel); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; opacity:0.55;}
+.pd-loop{stroke:var(--mist); stroke-width:1.5; stroke-dasharray:2 4;}
+.pd-loop-head{fill:var(--mist);}
+.pd-cards{display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:28px; text-align:center;}
+@media (max-width:760px){.pd-cards{grid-template-columns:1fr; text-align:left;}}
+.pd-card-n{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11px; letter-spacing:0.1em; color:var(--slate);}
+.pd-card h4{font-size:17px; margin-top:8px;}
+.pd-card p{font-size:14px; margin-top:8px; max-width:32ch; margin-left:auto; margin-right:auto;}
+@media (max-width:760px){.pd-card p{margin-left:0; margin-right:0;}}
 
 /* ---------- INSIGHTS ---------- */
 .insights-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
@@ -479,7 +488,6 @@ footer{padding:64px 0 40px; border-top:1px solid var(--line);}
 .card-grid-3 > .tile,
 .testi-grid > .testi-card,
 .insights-grid > .insight-card,
-.pillar-grid > .pillar,
 .process-list > .process-item,
 .industries-row > .industry-chip{
   opacity:0;
@@ -487,20 +495,19 @@ footer{padding:64px 0 40px; border-top:1px solid var(--line);}
 [data-reveal].in .card-grid-3 > .tile,
 [data-reveal].in .testi-grid > .testi-card,
 [data-reveal].in .insights-grid > .insight-card,
-[data-reveal].in .pillar-grid > .pillar,
-[data-reveal].in .process-list > .process-item,
+[data-reveal].in [data-reveal].in .process-list > .process-item,
 [data-reveal].in .industries-row > .industry-chip{
   animation:cardIn .55s cubic-bezier(.16,.84,.44,1) both;
 }
-.card-grid-3 > .tile:nth-child(1), .testi-grid > .testi-card:nth-child(1), .insights-grid > .insight-card:nth-child(1), .pillar-grid > .pillar:nth-child(1), .process-list > .process-item:nth-child(1), .industries-row > .industry-chip:nth-child(1){animation-delay:.04s;}
-.card-grid-3 > .tile:nth-child(2), .testi-grid > .testi-card:nth-child(2), .insights-grid > .insight-card:nth-child(2), .pillar-grid > .pillar:nth-child(2), .process-list > .process-item:nth-child(2), .industries-row > .industry-chip:nth-child(2){animation-delay:.11s;}
-.card-grid-3 > .tile:nth-child(3), .testi-grid > .testi-card:nth-child(3), .insights-grid > .insight-card:nth-child(3), .pillar-grid > .pillar:nth-child(3), .process-list > .process-item:nth-child(3), .industries-row > .industry-chip:nth-child(3){animation-delay:.18s;}
-.card-grid-3 > .tile:nth-child(4), .testi-grid > .testi-card:nth-child(4), .insights-grid > .insight-card:nth-child(4), .pillar-grid > .pillar:nth-child(4), .process-list > .process-item:nth-child(4), .industries-row > .industry-chip:nth-child(4){animation-delay:.25s;}
-.card-grid-3 > .tile:nth-child(5), .testi-grid > .testi-card:nth-child(5), .insights-grid > .insight-card:nth-child(5), .pillar-grid > .pillar:nth-child(5), .process-list > .process-item:nth-child(5), .industries-row > .industry-chip:nth-child(5){animation-delay:.32s;}
-.card-grid-3 > .tile:nth-child(6), .testi-grid > .testi-card:nth-child(6), .insights-grid > .insight-card:nth-child(6), .pillar-grid > .pillar:nth-child(6), .process-list > .process-item:nth-child(6), .industries-row > .industry-chip:nth-child(6){animation-delay:.39s;}
+.card-grid-3 > .tile:nth-child(1), .testi-grid > .testi-card:nth-child(1), .insights-grid > .insight-card:nth-child(1), .process-list > .process-item:nth-child(1), .industries-row > .industry-chip:nth-child(1){animation-delay:.04s;}
+.card-grid-3 > .tile:nth-child(2), .testi-grid > .testi-card:nth-child(2), .insights-grid > .insight-card:nth-child(2), .process-list > .process-item:nth-child(2), .industries-row > .industry-chip:nth-child(2){animation-delay:.11s;}
+.card-grid-3 > .tile:nth-child(3), .testi-grid > .testi-card:nth-child(3), .insights-grid > .insight-card:nth-child(3), .process-list > .process-item:nth-child(3), .industries-row > .industry-chip:nth-child(3){animation-delay:.18s;}
+.card-grid-3 > .tile:nth-child(4), .testi-grid > .testi-card:nth-child(4), .insights-grid > .insight-card:nth-child(4), .process-list > .process-item:nth-child(4), .industries-row > .industry-chip:nth-child(4){animation-delay:.25s;}
+.card-grid-3 > .tile:nth-child(5), .testi-grid > .testi-card:nth-child(5), .insights-grid > .insight-card:nth-child(5), .process-list > .process-item:nth-child(5), .industries-row > .industry-chip:nth-child(5){animation-delay:.32s;}
+.card-grid-3 > .tile:nth-child(6), .testi-grid > .testi-card:nth-child(6), .insights-grid > .insight-card:nth-child(6), .process-list > .process-item:nth-child(6), .industries-row > .industry-chip:nth-child(6){animation-delay:.39s;}
 @media (prefers-reduced-motion: reduce){
   .card-grid-3 > .tile, .testi-grid > .testi-card, .insights-grid > .insight-card,
-  .pillar-grid > .pillar, .process-list > .process-item, .industries-row > .industry-chip{
+  .process-list > .process-item, .industries-row > .industry-chip{
     opacity:1; animation:none;
   }
 }

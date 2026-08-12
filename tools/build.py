@@ -566,6 +566,62 @@ def sales_chart_svg():
     </div>
 """
 
+# ---- Business Pillars diagram: redesigned from the original site's teal
+# clip-art gears-and-arrows graphic. Same three real pillars and their
+# original wording, drawn as a clean node-and-connector diagram in the
+# site's own steel-blue / hairline / mono-numeral system instead.
+PILLARS = [
+    {"n": "01", "name": "Differentiate",
+     "desc": "“Be very good at what you are good at.” Know your product or service, and have a genuine differentiator."},
+    {"n": "02", "name": "Operate",
+     "desc": "Operate the business efficiently and effectively."},
+    {"n": "03", "name": "Protect",
+     "desc": "Protect the business structurally and financially."},
+]
+_PN_X = [110, 360, 610]
+_PN_Y = 55
+_PN_R = 27
+
+def pillars_diagram_svg():
+    nodes = ""
+    flow_arrows = ""
+    for i, (p, x) in enumerate(zip(PILLARS, _PN_X)):
+        nodes += (
+            f'    <circle cx="{x}" cy="{_PN_Y}" r="{_PN_R}" class="pd-node"/>\n'
+            f'    <text x="{x}" y="{_PN_Y}" class="pd-node-n tabular" text-anchor="middle" dy="6">{p["n"]}</text>\n'
+        )
+    for x1, x2 in zip(_PN_X, _PN_X[1:]):
+        mx = (x1 + x2) / 2
+        flow_arrows += (
+            f'    <line x1="{x1+_PN_R+6}" y1="{_PN_Y}" x2="{x2-_PN_R-14}" y2="{_PN_Y}" class="pd-flow"/>\n'
+            f'    <path d="M{mx-2},{_PN_Y-6} L{mx+7},{_PN_Y} L{mx-2},{_PN_Y+6}" class="pd-flow-head"/>\n'
+        )
+    loop_y = _PN_Y + 78
+    loop_d = (
+        f"M{_PN_X[0]},{_PN_Y+_PN_R+8} "
+        f"C{_PN_X[0]-40},{loop_y} {_PN_X[-1]+40},{loop_y} {_PN_X[-1]},{_PN_Y+_PN_R+8}"
+    )
+    return f"""
+    <div class="pillars-diagram" data-reveal>
+      <svg viewBox="0 0 720 165" class="pd-svg" role="img" aria-label="Three business pillars: Differentiate, Operate, Protect, reinforcing each other in a continuous cycle">
+{nodes}{flow_arrows}
+        <path d="{loop_d}" class="pd-loop" fill="none" marker-end="url(#pd-arrow)"/>
+        <defs>
+          <marker id="pd-arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse">
+            <path d="M0,0 L8,4 L0,8 Z" class="pd-loop-head"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="pd-cards">
+{"".join(f'''        <div class="pd-card">
+          <span class="pd-card-n">{p["n"]}</span>
+          <h4>{p["name"]}</h4>
+          <p>{p["desc"]}</p>
+        </div>
+''' for p in PILLARS)}      </div>
+    </div>
+"""
+
 home_body = f"""
 <section class="hero wrap">
   <div class="hero-grid">
@@ -1236,7 +1292,7 @@ write("clients", page("clients", "Clients",
     clients_body))
 
 # ------------------------------------------------------------------ ABOUT --
-about_body = """
+about_body = f"""
 <section class="wrap" data-reveal>
   <div class="about-grid">
     <div>
@@ -1261,13 +1317,8 @@ about_body = """
 
 <section class="section-alt">
   <div class="wrap" data-reveal>
-    <div class="section-head"><span class="eyebrow">Business pillars</span><h2>What the partnership model is built on.</h2></div>
-    <div class="pillar-grid">
-      <div class="pillar"><span class="n">i</span><h4>Partnership Alignment</h4><p>Equity + retainer, so our incentive is your enterprise value.</p></div>
-      <div class="pillar"><span class="n">ii</span><h4>Strategic Clarity</h4><p>A plan built for this business, not a template.</p></div>
-      <div class="pillar"><span class="n">iii</span><h4>Financial Discipline</h4><p>Reporting and cash management that scale with growth.</p></div>
-      <div class="pillar"><span class="n">iv</span><h4>Delivery</h4><p>We stay inside the business until the plan is real.</p></div>
-    </div>
+    <div class="section-head"><span class="eyebrow">Business pillars</span><h2>What Mentec looks at in every business.</h2><p>The same three pillars behind every engagement &mdash; each one reinforcing the other two.</p></div>
+    {pillars_diagram_svg()}
   </div>
 </section>
 
