@@ -28,6 +28,7 @@ CLIENTS = [
         "stat_value": "80%",
         "stat_label": "of revenue now from commercial projects",
         "featured": True,
+        "logo": None,  # pending — real Siric Architects mark not supplied yet
     },
     {
         "id": "buyerscircle",
@@ -38,6 +39,7 @@ CLIENTS = [
         "result": "This led to new funding models and a more attractive investment proposition.",
         "stat_value": None, "stat_label": None,
         "featured": False,
+        "logo": "buyerscircle.png",
     },
     {
         "id": "excitation",
@@ -48,6 +50,7 @@ CLIENTS = [
         "result": "Core people introduced to drive methodology and structured practices.",
         "stat_value": None, "stat_label": None,
         "featured": False,
+        "logo": "excitation.png",
     },
     {
         "id": "coax",
@@ -58,6 +61,7 @@ CLIENTS = [
         "result": "Faster conversations, which in turn lead to more sales and stronger relationships.",
         "stat_value": None, "stat_label": None,
         "featured": False,
+        "logo": "coax.png",
     },
     {
         "id": "brandmarkets",
@@ -68,6 +72,7 @@ CLIENTS = [
         "result": "",
         "stat_value": None, "stat_label": None,
         "featured": False,
+        "logo": "brandmarkets.png",
     },
 ]
 
@@ -432,11 +437,25 @@ def mini_cta(prompt, button_label="Book an introductory call"):
 """
 
 # ---------------------------------------------------------------- HOME -----
+# Intrinsic pixel dimensions of the real logo files, so the <img> reserves
+# the right aspect ratio (height is fixed by CSS; width follows from this).
+LOGO_DIMS = {
+    "buyerscircle.png": (310, 128),
+    "excitation.png": (244, 244),
+    "coax.png": (288, 88),
+    "brandmarkets.png": (284, 128),
+}
+
 def client_chip_row():
-    return "\n".join(
-        f'        <a href="clients.html#{c["id"]}" class="logo-chip">{c["name"]}</a>'
-        for c in CLIENTS
-    )
+    rows = []
+    for c in CLIENTS:
+        if c.get("logo"):
+            w, h = LOGO_DIMS[c["logo"]]
+            inner = f'<img src="assets/logos/{c["logo"]}" alt="{c["name"]}" width="{w}" height="{h}" loading="lazy">'
+        else:
+            inner = c["name"]
+        rows.append(f'        <a href="clients.html#{c["id"]}" class="logo-chip">{inner}</a>')
+    return "\n".join(rows)
 
 # ---- Impact chart: indexed Revenue / Profit / Operating Cost over a typical
 # 12-month engagement. Dummy/illustrative data — never presented as a real

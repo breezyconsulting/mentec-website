@@ -333,8 +333,18 @@ section{padding:80px 0;}
 .logos-section{padding:34px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
 .logos-label{font-size:12px; text-align:center; margin-bottom:22px;}
 .logos-row{display:flex; flex-wrap:wrap; gap:14px; justify-content:center;}
-.logo-chip{border:1px solid var(--line); padding:11px 20px; font-family:Iowan Old Style, Georgia, serif; font-size:15px; color:var(--text-soft); background:var(--paper-raised); text-decoration:none; transition:border-color .15s ease, color .15s ease;}
+.logo-chip{
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--line); padding:11px 24px; min-height:52px;
+  font-family:Iowan Old Style, Georgia, serif; font-size:15px; color:var(--text-soft);
+  background:var(--paper-raised); text-decoration:none; transition:border-color .15s ease, color .15s ease;
+}
 .logo-chip:hover{border-color:var(--steel); color:var(--steel);}
+.logo-chip img{height:22px; width:auto; display:block;}
+/* Logo artwork is black-on-transparent; flip it for dark backgrounds rather
+   than shipping separate light/dark logo files. */
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .logo-chip img{filter:invert(1);} }
+:root[data-theme="dark"] .logo-chip img{filter:invert(1);}
 
 /* ---------- SERVICES (full page) ---------- */
 .service-block{padding:46px 0; border-bottom:1px solid var(--line); display:grid; grid-template-columns:220px 1fr; gap:40px; scroll-margin-top:90px;}
