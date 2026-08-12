@@ -420,6 +420,31 @@ section{padding:80px 0;}
 .credential-list{list-style:none; margin:20px 0 0; padding:0; display:flex; flex-direction:column; gap:10px;}
 .credential-list li{font-size:14.5px; color:var(--text-soft); display:flex; gap:10px;}
 .credential-list li::before{content:"—"; color:var(--steel);}
+/* ---------- MINI CTA (between-sections, not a full colour band) ---------- */
+.mini-cta{padding:44px 0; text-align:center; border-bottom:1px solid var(--line);}
+.mini-cta p{font-family:Iowan Old Style, Georgia, serif; font-size:19px; font-style:italic; color:var(--ink); margin-bottom:20px; max-width:44ch; margin-left:auto; margin-right:auto;}
+
+/* ---------- EQUITY / RETAINER CHART ---------- */
+.eq-chart-card{border:1px solid var(--line); background:var(--paper-raised); padding:36px 40px;}
+.eq-chart-head p{margin-top:10px; font-size:14px; max-width:52ch;}
+.eq-svg{width:100%; max-width:420px; height:auto; display:block; margin:24px auto 0; overflow:visible;}
+.eq-baseline{stroke:var(--line); stroke-width:1;}
+.eq-bar{fill:var(--steel); transform:scaleY(0); transform-box:fill-box; transform-origin:bottom; transition:transform 1s cubic-bezier(.16,.84,.44,1);}
+.eq-bar[data-series="with-equity"]{fill:var(--steel-bright); transition-delay:.15s;}
+.eq-chart-card.in .eq-bar{transform:scaleY(1);}
+@media (prefers-reduced-motion: reduce){
+  .eq-bar{transform:scaleY(1); transition:none;}
+  .eq-delta{opacity:1; transition:none;}
+}
+.eq-bar-value{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:20px; font-weight:600; fill:var(--ink);}
+.eq-bar-label{font-family:Iowan Old Style, Georgia, serif; font-size:14px; fill:var(--ink);}
+.eq-bar-sub{font-family:ui-monospace,monospace; font-size:9.5px; fill:var(--text-soft);}
+.eq-delta{opacity:0; transition:opacity .5s ease .9s;}
+.eq-chart-card.in .eq-delta{opacity:1;}
+.eq-delta-line{stroke:var(--slate); stroke-width:1.25; stroke-dasharray:3 3;}
+.eq-delta-head{fill:var(--slate);}
+.eq-delta-label{font-family:ui-monospace,monospace; font-size:12px; fill:var(--slate);}
+
 /* ---------- BUSINESS PILLARS DIAGRAM ---------- */
 .pillars-diagram{margin-top:32px;}
 .pd-svg{width:100%; height:auto; display:block; overflow:visible;}

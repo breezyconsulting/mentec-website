@@ -13,7 +13,7 @@ NOINDEX = True  # staging deploy — flip to False (and drop robots.txt disallow
 
 SITE_NAME = "Mentec Business Advisory"
 ADDRESS = "Suite 6.01, 7 Maitland Pl, Norwest NSW 2153"
-EMAIL = "joe.siric@mentec.com.au"
+EMAIL = "info@mentec.com.au"
 PHONE = "+61 414 674 353"
 PHONE_TEL = "+61414674353"
 
@@ -83,7 +83,7 @@ TESTIMONIALS = [
     },
     {
         "quote": "Having someone with equity in the outcome changes the conversation. It stopped feeling like billable hours and started feeling like a partner.",
-        "name": "Joel Fuller", "title": "Director", "company": "COAX",
+        "name": "Joel Fuller", "title": "CEO/Co Founder", "company": "COAX",
     },
 ]
 
@@ -98,11 +98,13 @@ def testimonials_grid():
     return cards
 
 PAGES = ["home","services","approach","case-studies","clients","about","insights","contact",
-         "digital-strategy-execution","ecommerce-strategy-execution","customer-experience-design"]
+         "digital-strategy-execution","ecommerce-strategy-execution","customer-experience-design",
+         "equity-retainer"]
 # Clean URLs, arbitrary nesting: SLUG_DIR is the single source of truth for where a
 # page lives on disk ("." = site root). Every page but home is a directory with an
 # index.html inside it, so nothing is ever linked with a ".html" extension. The three
-# new service sub-pages nest one level deeper, under services/.
+# service sub-pages nest one level deeper, under services/; equity-retainer nests
+# under approach/.
 SLUG_DIR = {
     "home": ".",
     "services": "services", "approach": "approach", "case-studies": "case-studies",
@@ -110,6 +112,7 @@ SLUG_DIR = {
     "digital-strategy-execution": "services/digital-strategy-execution",
     "ecommerce-strategy-execution": "services/ecommerce-strategy-execution",
     "customer-experience-design": "services/customer-experience-design",
+    "equity-retainer": "approach/equity-retainer",
 }
 SLUG_TO_FILE = {slug: (d + "/index.html" if d != "." else "index.html") for slug, d in SLUG_DIR.items()}
 TITLES = {
@@ -124,6 +127,7 @@ TITLES = {
     "digital-strategy-execution": "Digital Strategy & Execution — Mentec Business Advisory",
     "ecommerce-strategy-execution": "Ecommerce Strategy & Execution — Mentec Business Advisory",
     "customer-experience-design": "Customer & User Experience Design — Mentec Business Advisory",
+    "equity-retainer": "Equity & Retainer | How the Trade-Off Works — Mentec Business Advisory",
 }
 DESCRIPTIONS = {
     "home": "Virtual CFO leadership and an equity-aligned partnership for ambitious Sydney and Australia-wide SMEs — 30+ years of senior CFO experience, from strategy through to hands-on execution.",
@@ -133,10 +137,11 @@ DESCRIPTIONS = {
     "clients": "Who Mentec partners with, the sectors we work in, and the SME businesses we've worked alongside.",
     "about": "Founder Joe Siric spent his career as a CFO before founding Mentec — providing the kind of senior leadership known as a virtual or fractional CFO, structured as a partnership.",
     "insights": "Field notes on virtual CFO leadership, financial management, enterprise value and strategic planning for Australian SME owners.",
-    "contact": "Book a 20-minute introductory call with Mentec Business Advisory in Norwest, Sydney — or reach us directly by phone or email.",
+    "contact": "Book a 15-minute introductory call with Mentec Business Advisory in Norwest, Sydney — or reach us directly by phone or email.",
     "digital-strategy-execution": "Digital transformation roadmaps and hands-on execution, led by a team with senior digital leadership experience across private and public companies.",
     "ecommerce-strategy-execution": "Ecommerce channel strategy, unit economics and execution support, grounded in senior ecommerce leadership across private and public companies.",
     "customer-experience-design": "Customer and user experience design tied to commercial outcomes, led by a team with senior CX/UX leadership across private and public companies.",
+    "equity-retainer": "Taking an equity position is optional. When a partner takes one, the retainer is reduced; without it, the retainer is higher. How the trade-off works.",
 }
 
 COMPANY_PAGES = {"approach", "case-studies", "clients", "about"}
@@ -254,6 +259,7 @@ def footer_html():
         <h5>Company</h5>
         <ul>
           <li><a href="approach.html">Approach</a></li>
+          <li><a href="equity-retainer.html">Equity &amp; Retainer</a></li>
           <li><a href="case-studies.html">Case Studies</a></li>
           <li><a href="clients.html">Clients</a></li>
           <li><a href="about.html">About</a></li>
@@ -283,7 +289,7 @@ HEAD_EXTRA = {
     "name": "Mentec Business Advisory",
     "alternateName": "Mentec Virtual CFO Services",
     "description": "Virtual CFO leadership, strategy, planning and execution for ambitious SME businesses, delivered through an equity-aligned partnership model.",
-    "email": "joe.siric@mentec.com.au",
+    "email": "info@mentec.com.au",
     "telephone": "+61414674353",
     "address": {
       "@type": "PostalAddress",
@@ -411,6 +417,19 @@ def countup_span(value_str, extra_class=""):
     num, suffix = (m.group(1), m.group(2)) if m else (value_str, "")
     cls = ("big tabular" + (" " + extra_class if extra_class else "")).strip()
     return f'<span class="{cls}" data-countup="{num}" data-suffix="{suffix}">{value_str}</span>'
+
+def mini_cta(prompt, button_label="Book an introductory call"):
+    """A slim, unobtrusive between-sections CTA -- deliberately not another
+    full-width colour band like .final-cta, so the page doesn't read as a
+    string of blue banners."""
+    return f"""
+<section class="mini-cta">
+  <div class="wrap" data-reveal>
+    <p>{prompt}</p>
+    <a href="contact.html" class="btn btn-primary">{button_label}</a>
+  </div>
+</section>
+"""
 
 # ---------------------------------------------------------------- HOME -----
 def client_chip_row():
@@ -622,6 +641,53 @@ def pillars_diagram_svg():
     </div>
 """
 
+# ---- Equity/retainer trade-off bar chart. Illustrative index only, no real
+# dollar figures (Mentec's actual terms are set per partnership) -- reuses
+# the site's existing generic [data-reveal] and [data-countup] behaviour,
+# so it needs no bespoke JS.
+EQ_BARS = [
+    {"id": "no-equity", "label": "No equity stake", "sub": "Standalone advisory fee", "value": 100},
+    {"id": "with-equity", "label": "With equity stake", "sub": "Reduced to reflect the equity position", "value": 55},
+]
+_EQ_X = [110, 300]
+_EQ_BAR_W = 90
+_EQ_BASE_Y = 210
+_EQ_MAX_H = 150
+
+def equity_retainer_chart():
+    delta = round((EQ_BARS[1]["value"] / EQ_BARS[0]["value"] - 1) * 100)
+    bars = ""
+    for b, x in zip(EQ_BARS, _EQ_X):
+        h = _EQ_MAX_H * (b["value"] / 100)
+        y = _EQ_BASE_Y - h
+        bars += f"""      <g>
+        <rect x="{x}" y="{y:.1f}" width="{_EQ_BAR_W}" height="{h:.1f}" class="eq-bar" data-series="{b['id']}"/>
+        <text x="{x + _EQ_BAR_W/2}" y="{y - 14:.1f}" text-anchor="middle" class="eq-bar-value tabular" data-countup="{b['value']}">{b['value']}</text>
+        <text x="{x + _EQ_BAR_W/2}" y="{_EQ_BASE_Y + 26}" text-anchor="middle" class="eq-bar-label">{b['label']}</text>
+        <text x="{x + _EQ_BAR_W/2}" y="{_EQ_BASE_Y + 44}" text-anchor="middle" class="eq-bar-sub">{b['sub']}</text>
+      </g>
+"""
+    return f"""
+    <div class="eq-chart-card" data-reveal>
+      <div class="eq-chart-head">
+        <span class="eyebrow">Illustrative &mdash; not a fixed rate card</span>
+        <p>The exact reduction is agreed per partnership, but the direction always holds: more equity, less cash retainer.</p>
+      </div>
+      <svg viewBox="0 0 410 280" class="eq-svg" role="img" aria-label="Illustrative comparison: retainer level with no equity stake versus with an equity stake, showing the retainer is lower when equity is taken">
+        <line x1="60" y1="{_EQ_BASE_Y}" x2="380" y2="{_EQ_BASE_Y}" class="eq-baseline"/>
+{bars}        <g class="eq-delta">
+          <path d="M{_EQ_X[0]+_EQ_BAR_W+14},{_EQ_BASE_Y - _EQ_MAX_H*(EQ_BARS[0]['value']/100) + 8:.1f} L{_EQ_X[1]-14},{_EQ_BASE_Y - _EQ_MAX_H*(EQ_BARS[1]['value']/100) + 8:.1f}" class="eq-delta-line" marker-end="url(#eq-arrow)"/>
+          <text x="{(_EQ_X[0]+_EQ_BAR_W+_EQ_X[1])/2}" y="{_EQ_BASE_Y - _EQ_MAX_H*(EQ_BARS[0]['value']/100) - 6:.1f}" text-anchor="middle" class="eq-delta-label">{delta}%</text>
+        </g>
+        <defs>
+          <marker id="eq-arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse">
+            <path d="M0,0 L8,4 L0,8 Z" class="eq-delta-head"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+"""
+
 home_body = f"""
 <section class="hero wrap">
   <div class="hero-grid">
@@ -637,7 +703,7 @@ home_body = f"""
     <div class="ledger-card" data-reveal>
       <div class="ledger-head"><span class="eyebrow" style="margin:0;">On the ledger</span></div>
       <div class="ledger-row"><span class="k">Senior CFO experience</span><span class="v tabular">30+ yrs</span></div>
-      <div class="ledger-row"><span class="k">How we're paid</span><span class="v" style="font-size:15px;">Equity + retainer</span></div>
+      <div class="ledger-row"><span class="k">How we're paid</span><span class="v" style="font-size:15px;">Equity<a href="equity-retainer.html" class="inline-link" title="Equity is optional — see how it trades off against the retainer">*</a> + retainer</span></div>
       <div class="ledger-row"><span class="k">Where advice ends</span><span class="v" style="font-size:15px;">It doesn't &mdash; we execute</span></div>
       <div class="ledger-row"><span class="k">Who it's for</span><span class="v" style="font-size:15px;">SME, strong model</span></div>
     </div>
@@ -688,6 +754,7 @@ home_body = f"""
   </div>
 </section>
 
+{mini_cta("Not sure which of the six fits where you are right now?")}
 <section class="wrap" data-reveal>
   <div class="section-head">
     <span class="eyebrow">Additional Services</span>
@@ -695,12 +762,13 @@ home_body = f"""
     <p>Financial rigour sets the ceiling. The following three push a business toward it &mdash; led by people who've held senior roles in each, across private and publicly listed companies.</p>
   </div>
   <div class="card-grid-3">
-    <div class="tile"><span class="tag">Specialist</span><h3>Digital Strategy &amp; Execution</h3><p>A digital operating model built for the business you have, then delivered.</p><a class="more" href="digital-strategy-execution.html">Explore this service &rarr;</a></div>
-    <div class="tile"><span class="tag">Specialist</span><h3>Ecommerce Strategy &amp; Execution</h3><p>Channel strategy and unit economics that hold together commercially.</p><a class="more" href="ecommerce-strategy-execution.html">Explore this service &rarr;</a></div>
-    <div class="tile"><span class="tag">Specialist</span><h3>Customer &amp; UX Design</h3><p>Experience work judged by what it moves in the business.</p><a class="more" href="customer-experience-design.html">Explore this service &rarr;</a></div>
+    <div class="tile"><h3>Digital Strategy &amp; Execution</h3><p>A digital operating model built for the business you have, then delivered.</p><a class="more" href="digital-strategy-execution.html">Explore this service &rarr;</a></div>
+    <div class="tile"><h3>Ecommerce Strategy &amp; Execution</h3><p>Channel strategy and unit economics that hold together commercially.</p><a class="more" href="ecommerce-strategy-execution.html">Explore this service &rarr;</a></div>
+    <div class="tile"><h3>Customer &amp; UX Design</h3><p>Experience work judged by what it moves in the business.</p><a class="more" href="customer-experience-design.html">Explore this service &rarr;</a></div>
   </div>
 </section>
 
+{mini_cta("Growth, digital, ecommerce or experience — most engagements start with one problem and grow from there.")}
 <section class="wrap">
   <div class="section-head" data-reveal>
     <span class="eyebrow">Impact</span>
@@ -726,6 +794,9 @@ home_body = f"""
       <span class="cap">of revenue now derived from commercial projects</span>
     </div>
   </div>
+  <div style="margin-top:24px;">
+    <a href="case-studies.html#siric-architects" class="btn btn-ghost">Read the full Siric Architects case study &rarr;</a>
+  </div>
 </section>
 
 <section class="section-alt" data-reveal>
@@ -740,6 +811,7 @@ home_body = f"""
   </div>
 </section>
 
+{mini_cta("If it's a fit, the first call is 15 minutes.", "Book yours")}
 <section class="wrap" data-reveal>
   <div class="about-grid">
     <div>
@@ -1106,7 +1178,7 @@ approach_body = """
   <div class="section-head">
     <span class="eyebrow">Why it's different</span>
     <h2>The incentive most consultants don't share with you.</h2>
-    <p>In exchange for its services, Mentec takes a position in the partner business alongside a substantially more affordable retainer than a standalone consulting fee. That single structural choice changes almost everything else about how the relationship runs.</p>
+    <p>In exchange for its services, Mentec takes a position in the partner business alongside a substantially more affordable retainer than a standalone consulting fee. That single structural choice changes almost everything else about how the relationship runs. The equity position itself is optional &mdash; <a href="equity-retainer.html" class="inline-link">see how it trades off against the retainer &rarr;</a></p>
   </div>
   <div class="table-wrap">
     <table class="compare">
@@ -1175,6 +1247,77 @@ write("approach", page("approach", "Approach",
     "Advice you can act on &mdash; because we act on it with you.",
     "Most advisory relationships end at the recommendation. Ours is structured so that ending there would work against us too.",
     approach_body))
+
+# --------------------------------------------------------- EQUITY/RETAINER --
+EQUITY_RETAINER_FAQ = [
+    ("Is an equity position required to work with Mentec?",
+     "No. It's optional. Some partners prefer to keep it a straightforward cash arrangement, and that's a completely workable version of the same engagement."),
+    ("So what actually changes if I take it?",
+     "The retainer. Taking an equity position lowers the cash retainer, because part of Mentec's return is then tied to the enterprise value we help build &mdash; not just the monthly fee."),
+    ("What if I don't want to give up equity?",
+     "Then the retainer is set higher, structured as a standalone advisory fee. No equity changes hands, and the scope of work &mdash; strategy, planning, execution &mdash; doesn't change either way."),
+    ("How is the split actually decided?",
+     "Case by case, during the proposal stage, based on the business and what's being asked of the engagement. There's no fixed formula published here because there isn't one in practice."),
+]
+
+def equity_retainer_faq_html():
+    items = ""
+    for q, a in EQUITY_RETAINER_FAQ:
+        items += f"""    <details class="faq-item">
+      <summary>{q}</summary>
+      <div class="a"><p>{a}</p></div>
+    </details>
+"""
+    return items
+
+equity_retainer_body = f"""
+<section class="wrap" data-reveal>
+  <div class="section-head">
+    <span class="eyebrow">How it works</span>
+    <h2>One lever, two settings.</h2>
+    <p>Every Mentec engagement is paid for through the same two components &mdash; a retainer, and optionally, an equity position. Only the balance between them changes.</p>
+  </div>
+  <ul class="incl-list">
+    <li>Take an equity position, and the cash retainer is reduced &mdash; Mentec's return is then partly tied to the enterprise value we help build</li>
+    <li>Skip the equity position, and the retainer is set higher, structured as a standalone advisory fee</li>
+    <li>The scope of work is identical either way: CFO leadership, strategy, planning and hands-on execution</li>
+    <li>The split is agreed once, during the proposal stage &mdash; not renegotiated engagement to engagement</li>
+  </ul>
+</section>
+
+<section class="section-alt">
+  <div class="wrap" data-reveal>
+    <div class="section-head">
+      <span class="eyebrow">The trade-off</span>
+      <h2 style="font-size:24px;">More equity, less cash. Less equity, more cash.</h2>
+    </div>
+    {equity_retainer_chart()}
+  </div>
+</section>
+
+<section class="wrap" data-reveal>
+  <div class="section-head">
+    <span class="eyebrow">FAQ</span>
+    <h2 style="font-size:24px;">The questions this usually raises.</h2>
+  </div>
+  <div class="faq-list">
+{equity_retainer_faq_html()}  </div>
+</section>
+
+<section class="final-cta">
+  <div class="wrap">
+    <span class="eyebrow">Start here</span>
+    <h2>Talk through which setting fits your business.</h2>
+    <div class="hero-ctas"><a href="contact.html" class="btn btn-primary" style="background:#F3F8FB; color:var(--steel-deep);">Book an introductory call</a></div>
+  </div>
+</section>
+"""
+write("equity-retainer", page(
+    "equity-retainer", "Equity &amp; Retainer",
+    "How the equity and retainer actually trade off.",
+    "The equity position is optional. It exists to lower what you pay in cash &mdash; not as a requirement to work with Mentec.",
+    equity_retainer_body, parent=("Approach", "approach"),
+))
 
 # --------------------------------------------------------- CASE STUDIES ----
 featured = next(c for c in CLIENTS if c["featured"])
@@ -1368,7 +1511,7 @@ contact_body = f"""
     <div>
       <span class="eyebrow">Enquire</span>
       <h2 style="margin-top:14px; font-size:24px;">Tell us about the business.</h2>
-      <p style="margin-top:12px; font-size:14.5px; color:var(--text-soft);">Opens in your email client, addressed to Joe directly.</p>
+      <p style="margin-top:12px; font-size:14.5px; color:var(--text-soft);">Opens in your email client, addressed straight to Mentec.</p>
       <form style="margin-top:24px;" action="mailto:{EMAIL}" method="post" enctype="text/plain">
         <div class="field"><label for="fname">Name</label><input id="fname" name="Name" type="text" placeholder="Jordan Blake" required></div>
         <div class="field"><label for="fcompany">Company</label><input id="fcompany" name="Company" type="text" placeholder="Business name"></div>
@@ -1380,7 +1523,7 @@ contact_body = f"""
     <div>
       <span class="eyebrow">What happens next</span>
       <div class="process-list" style="margin-top:14px;">
-        <div class="process-item"><span class="num tabular">1</span><div><h4>Introductory call</h4><p>20 minutes to align on what matters and whether it's a fit &mdash; no obligation.</p></div></div>
+        <div class="process-item"><span class="num tabular">1</span><div><h4>Introductory call</h4><p>15 minutes to align on what matters and whether it's a fit &mdash; no obligation.</p></div></div>
         <div class="process-item"><span class="num tabular">2</span><div><h4>Engagement proposal</h4><p>If it's a fit, a high-level program is proposed and agreed by all parties.</p></div></div>
         <div class="process-item"><span class="num tabular">3</span><div><h4>Discovery begins</h4><p>Mentec starts understanding the business properly &mdash; before any plan is written.</p></div></div>
       </div>
@@ -1389,7 +1532,7 @@ contact_body = f"""
 </section>
 """
 write("contact", page("contact", "Contact",
-    "Start with a 20-minute introductory call.",
+    "Start with a 15-minute introductory call.",
     "No pitch deck required. We'll talk about the business, where it's stuck, and whether Mentec's model is actually a fit &mdash; based in Norwest, Sydney, working with SME partners Australia-wide.",
     contact_body))
 

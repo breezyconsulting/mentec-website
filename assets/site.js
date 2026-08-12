@@ -53,27 +53,46 @@ setTimeout(function(){
     var data = JSON.parse(raw);
     var DRAW_MS = 1500, STAGGER_MS = 220;
 
-    var drawn = false;
-    function draw(){
-      if(drawn) return;
-      drawn = true;
-      var series = ['revenue', 'profit', 'cost'];
-      var xSpan = data.x1 - data.x0;
-      var maxDelay = (series.length - 1) * STAGGER_MS;
+    var series = ['revenue', 'profit', 'cost'];
+    var xSpan = data.x1 - data.x0;
+    var maxDelay = (series.length - 1) * STAGGER_MS;
+    var runId = 0; // bumped on every (re)draw so stale rAF loops from a
+                   // previous run (e.g. scrolled away mid-animation) stop
+                   // themselves instead of fighting the new one.
 
-      function revealSeries(id){
+    function reset(){
+      card.classList.remove('drawn', 'no-anim', 'pinging');
+      series.forEach(function(id){
+        var path = svg.querySelector('.chart-line[data-series="' + id + '"]');
+        var tip = svg.querySelector('.chart-tip[data-series="' + id + '"]');
+        var clipRect = svg.querySelector('.chart-clip-rect[data-series="' + id + '"]');
         var dot = svg.querySelector('.chart-dot[data-series="' + id + '"]');
         var label = svg.querySelector('.chart-endlabel[data-series="' + id + '"]');
-        if(dot) dot.classList.add('revealed');
-        if(label) label.classList.add('revealed');
-        var pct = label && label.querySelector('.chart-endlabel-pct[data-countup-pct]');
-        if(pct){
-          var target = parseFloat(pct.getAttribute('data-countup-pct'));
-          animateNumber(target, reduceMotion ? 0 : 550, function(v){
-            pct.textContent = (v >= 0 ? '+' : '') + Math.round(v) + '%';
-          });
-        }
+        if(path && path.style.strokeDasharray){ path.style.strokeDashoffset = path.style.strokeDasharray; }
+        if(tip) tip.style.opacity = 0;
+        if(clipRect) clipRect.setAttribute('width', '0');
+        if(dot) dot.classList.remove('revealed');
+        if(label) label.classList.remove('revealed');
+      });
+    }
+
+    function revealSeries(id){
+      var dot = svg.querySelector('.chart-dot[data-series="' + id + '"]');
+      var label = svg.querySelector('.chart-endlabel[data-series="' + id + '"]');
+      if(dot) dot.classList.add('revealed');
+      if(label) label.classList.add('revealed');
+      var pct = label && label.querySelector('.chart-endlabel-pct[data-countup-pct]');
+      if(pct){
+        var target = parseFloat(pct.getAttribute('data-countup-pct'));
+        animateNumber(target, reduceMotion ? 0 : 550, function(v){
+          pct.textContent = (v >= 0 ? '+' : '') + Math.round(v) + '%';
+        });
       }
+    }
+
+    function draw(){
+      reset();
+      var myRun = ++runId;
 
       if(reduceMotion){
         card.classList.add('drawn', 'no-anim');
@@ -90,9 +109,11 @@ setTimeout(function(){
           path.style.strokeDasharray = len;
           path.style.strokeDashoffset = len;
           setTimeout(function(){
+            if(myRun !== runId) return; // superseded by a later draw() before this stagger fired
             if(tip) tip.style.opacity = 1;
             var start = null;
             function tick(ts){
+              if(myRun !== runId) return; // scrolled away / re-triggered mid-flight
               if(start === null) start = ts;
               var p = Math.min((ts - start) / DRAW_MS, 1);
               var eased = 1 - Math.pow(1 - p, 3); // ease-out-cubic
@@ -114,11 +135,11 @@ setTimeout(function(){
         });
       }
       // start the "live" ping once the slowest line has finished drawing
-      setTimeout(function(){ card.classList.add('pinging'); }, reduceMotion ? 0 : DRAW_MS + maxDelay);
+      setTimeout(function(){ if(myRun === runId) card.classList.add('pinging'); }, reduceMotion ? 0 : DRAW_MS + maxDelay);
     }
     if('IntersectionObserver' in window){
       var cio = new IntersectionObserver(function(entries){
-        entries.forEach(function(e){ if(e.isIntersecting){ draw(); cio.unobserve(e.target); } });
+        entries.forEach(function(e){ if(e.isIntersecting){ draw(); } });
       }, {threshold:0.3});
       cio.observe(card);
     } else { draw(); }
