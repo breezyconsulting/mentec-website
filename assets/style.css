@@ -530,7 +530,7 @@ footer{padding:64px 0 40px; border-top:1px solid var(--line);}
 [data-reveal].in .card-grid-3 > .tile,
 [data-reveal].in .testi-grid > .testi-card,
 [data-reveal].in .insights-grid > .insight-card,
-[data-reveal].in [data-reveal].in .process-list > .process-item,
+[data-reveal].in .process-list > .process-item,
 [data-reveal].in .industries-row > .industry-chip{
   animation:cardIn .55s cubic-bezier(.16,.84,.44,1) both;
 }
