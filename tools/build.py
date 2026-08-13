@@ -423,6 +423,18 @@ def countup_span(value_str, extra_class=""):
     cls = ("big tabular" + (" " + extra_class if extra_class else "")).strip()
     return f'<span class="{cls}" data-countup="{num}" data-suffix="{suffix}">{value_str}</span>'
 
+def pull_quote(line, sub=""):
+    """A standalone editorial statement, no card/box -- deliberately plain so
+    it doesn't compete with the blue .callout boxes used elsewhere."""
+    sub_html = f'<span>{sub}</span>' if sub else ""
+    return f"""
+<section class="pull-quote">
+  <div class="wrap" data-reveal>
+    <p>&ldquo;{line}&rdquo;{sub_html}</p>
+  </div>
+</section>
+"""
+
 def mini_cta(prompt, button_label="Book an introductory call"):
     """A slim, unobtrusive between-sections CTA -- deliberately not another
     full-width colour band like .final-cta, so the page doesn't read as a
@@ -738,6 +750,7 @@ home_body = f"""
   </div>
 </section>
 
+{pull_quote("Doing the work brilliantly and running the business behind it are two different skills.", "Mentec exists for the gap between the two.")}
 <section class="wrap" data-reveal>
   <div class="section-head">
     <span class="eyebrow">Approach</span>
@@ -1479,7 +1492,7 @@ about_body = f"""
 
 <section class="section-alt">
   <div class="wrap" data-reveal>
-    <div class="section-head"><span class="eyebrow">Business pillars</span><h2>What Mentec looks at in every business.</h2><p>The same three pillars behind every engagement &mdash; each one reinforcing the other two.</p></div>
+    <div class="section-head"><span class="eyebrow">Business pillars</span><h2>What Mentec looks at in every business.</h2><p>Being excellent at the work and being excellent at running a business aren't the same skill. These are the three pillars Mentec looks at in every partner &mdash; each one reinforcing the other two.</p></div>
     {pillars_diagram_svg()}
   </div>
 </section>
