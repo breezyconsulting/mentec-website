@@ -423,26 +423,15 @@ def countup_span(value_str, extra_class=""):
     cls = ("big tabular" + (" " + extra_class if extra_class else "")).strip()
     return f'<span class="{cls}" data-countup="{num}" data-suffix="{suffix}">{value_str}</span>'
 
-def pull_quote(line, sub=""):
-    """A standalone editorial statement, no card/box -- deliberately plain so
-    it doesn't compete with the blue .callout boxes used elsewhere."""
-    sub_html = f'<span>{sub}</span>' if sub else ""
-    return f"""
-<section class="pull-quote">
-  <div class="wrap" data-reveal>
-    <p>&ldquo;{line}&rdquo;{sub_html}</p>
-  </div>
-</section>
-"""
-
-def mini_cta(prompt, button_label="Book an introductory call"):
+def mini_cta(prompt, button_label="Book an introductory call", sub=""):
     """A slim, unobtrusive between-sections CTA -- deliberately not another
     full-width colour band like .final-cta, so the page doesn't read as a
     string of blue banners."""
+    sub_html = f'<span class="mini-cta-sub">{sub}</span>' if sub else ""
     return f"""
 <section class="mini-cta">
   <div class="wrap" data-reveal>
-    <p>{prompt}</p>
+    <p>{prompt}{sub_html}</p>
     <a href="contact.html" class="btn btn-primary">{button_label}</a>
   </div>
 </section>
@@ -750,7 +739,6 @@ home_body = f"""
   </div>
 </section>
 
-{pull_quote("Doing the work brilliantly and running the business behind it are two different skills.", "Mentec exists for the gap between the two.")}
 <section class="wrap" data-reveal>
   <div class="section-head">
     <span class="eyebrow">Approach</span>
@@ -786,7 +774,7 @@ home_body = f"""
   </div>
 </section>
 
-{mini_cta("Not sure which of the six fits where you are right now?")}
+{mini_cta("&ldquo;Doing the work brilliantly and running the business behind it are two different skills.&rdquo;", sub="Mentec exists for the gap between the two.")}
 <section class="wrap" data-reveal>
   <div class="section-head">
     <span class="eyebrow">Additional Services</span>
