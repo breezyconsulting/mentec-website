@@ -341,6 +341,7 @@ section{padding:80px 0;}
 }
 .logo-chip:hover{opacity:0.7; color:var(--steel);}
 .logo-chip img{height:25px; width:auto; display:block; transition:opacity .15s ease;}
+.logo-chip img.logo-coax{height:37.5px;} /* Coax logo requested 50% larger than the standard 25px */
 /* Logo artwork is black-on-transparent; flip it for dark backgrounds rather
    than shipping separate light/dark logo files. */
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .logo-chip img{filter:invert(1);} }

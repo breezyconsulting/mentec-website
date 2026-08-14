@@ -452,7 +452,7 @@ def client_chip_row():
     for c in CLIENTS:
         if c.get("logo"):
             w, h = LOGO_DIMS[c["logo"]]
-            inner = f'<img src="assets/logos/{c["logo"]}" alt="{c["name"]}" width="{w}" height="{h}" loading="lazy">'
+            inner = f'<img src="assets/logos/{c["logo"]}" alt="{c["name"]}" width="{w}" height="{h}" loading="lazy" class="logo-{c["id"]}">'
         else:
             inner = c["name"]
         rows.append(f'        <a href="clients.html#{c["id"]}" class="logo-chip">{inner}</a>')
@@ -1066,7 +1066,7 @@ write("services", page("services", "Services",
     services_body))
 
 # ---------------------------------------------------- SERVICE SUB-PAGES -----
-CREDIBILITY_LINE = "This capability is led by people who have held senior positions across multiple sectors, delivering real growth for both private and publicly listed companies &mdash; judgment that's been tested against real P&amp;Ls, not just frameworks."
+CREDIBILITY_LINE = "This capability is led by people who have held senior positions inside some of Australia's largest companies &mdash; including Dan Murphy's, Woolworths, Pernod Ricard and leading advertising agencies &mdash; driving real change, from the rollout of major initiatives through to growth in profit and revenue, for both private and publicly listed companies."
 
 def service_subpage_cta(label):
     return f"""
@@ -1377,6 +1377,20 @@ for c in others:
     </div>
 """
 case_html += """  </div>
+
+  <div class="section-head" style="margin-top:64px;">
+    <span class="eyebrow">Before Mentec</span>
+    <h2>The team&rsquo;s track record on the tools.</h2>
+    <p>Not every result on these pages started as a Mentec partnership &mdash; some of it is what the people behind Mentec built beforehand, hands-on, inside some of Australia&rsquo;s largest companies.</p>
+  </div>
+  <div class="sample-case-grid">
+    <div class="sample-case" data-reveal id="dan-murphys-beaten-board">
+      <span class="eyebrow">Retail &mdash; UX, Motion &amp; Development, National Rollout</span>
+      <h4>Dan Murphy&rsquo;s &mdash; Beaten Board</h4>
+      <p>Every day, Dan Murphy&rsquo;s staff tore pages from competitor catalogues and pinned them to a corkboard stamped &ldquo;BEATEN&rdquo; &mdash; proof of the retailer&rsquo;s price promise, done entirely by hand, store by store.</p>
+      <p style="margin-top:10px;"><strong style="color:var(--ink);">What was built:</strong> An API-driven, animated real-time catalogue in a dynamic layout, able to feature any of Dan Murphy&rsquo;s 50,000+ products &mdash; designed and rolled out across every Dan Murphy&rsquo;s store nationwide, replacing the manual process and letting prices update on the hour.</p>
+    </div>
+  </div>
 </section>
 
 <section class="final-cta">
