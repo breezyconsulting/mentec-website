@@ -344,7 +344,7 @@ section{padding:80px 0;}
 .logo-chip img.logo-coax{height:80px;} /* the source file's mark only fills ~31% of its square canvas height, so the box has to be taller than the others for the visible mark to actually match their ~25px height */
 .logo-chip img.logo-brandmarkets,
 .logo-chip img.logo-buyerscircle{height:37.5px;} /* requested 50% larger than the standard 25px */
-a.logo-chip[href$="#siric-architects"]{font-size:22px;} /* text fallback (no logo file yet), requested 30% larger than the standard 17px */
+a.logo-chip[href$="#siric-architects"]{font-size:22px; font-weight:700; color:var(--ink);} /* text fallback (no logo file yet); bumped weight/color to match the visual weight of the bold black logo marks beside it */
 /* Logo artwork is black-on-transparent; flip it for dark backgrounds rather
    than shipping separate light/dark logo files. */
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .logo-chip img{filter:invert(1);} }
