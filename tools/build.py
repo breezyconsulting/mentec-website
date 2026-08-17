@@ -442,8 +442,8 @@ def mini_cta(prompt, button_label="Book an introductory call", sub=""):
 # the right aspect ratio (height is fixed by CSS; width follows from this).
 LOGO_DIMS = {
     "buyerscircle.png": (310, 128),
-    "excitation.png": (244, 244),
-    "coax.png": (288, 88),
+    "excitation.png": (288, 88),
+    "coax.png": (244, 244),
     "brandmarkets.png": (284, 128),
 }
 
