@@ -107,6 +107,22 @@
 </div>
 
 <section class="wrap" data-reveal>
+  <div class="time-picker" id="timePicker">
+    <div class="section-head" style="margin-bottom:0;">
+      <span class="eyebrow">Pick a time</span>
+      <h2 style="font-size:22px;">See a slot that works? Request it directly.</h2>
+      <p style="font-size:14.5px; color:var(--text-soft); margin-top:8px;">Weekdays, 9am&ndash;5pm. Picking a time drafts an email requesting that slot &mdash; Joe confirms it by reply, it isn't an automatic booking.</p>
+    </div>
+    <div class="tp-days" id="tpDays" style="margin-top:24px;"></div>
+    <div class="tp-slots" id="tpSlots"></div>
+    <div class="tp-footer">
+      <span class="tp-selected" id="tpSelected">No time selected yet.</span>
+      <a href="#" id="tpRequestBtn" class="btn btn-primary tp-request-btn tp-disabled" aria-disabled="true">Request this time</a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" data-reveal>
   <div class="contact-grid">
     <div>
       <span class="eyebrow">Enquire</span>

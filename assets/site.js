@@ -277,4 +277,93 @@ setTimeout(function(){
   document.querySelectorAll('.mega-link, .mobile-panel a').forEach(function(a){
     a.addEventListener('click', function(e){ e.stopPropagation(); });
   });
+
+  // time picker (contact page) — every weekday/hour slot shown is genuinely
+  // open; picking one drafts a real mailto request, it does not book
+  // anything automatically. No slot is ever hidden or marked unavailable.
+  var tpDays = document.getElementById('tpDays');
+  var tpSlots = document.getElementById('tpSlots');
+  var tpSelected = document.getElementById('tpSelected');
+  var tpRequestBtn = document.getElementById('tpRequestBtn');
+  if(tpDays && tpSlots && tpSelected && tpRequestBtn){
+    var TP_HOURS = [9,10,11,12,13,14,15,16];
+    var TP_DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var TP_MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    function tpNextWeekdays(count, startOffsetDays){
+      var out = [];
+      var d = new Date();
+      d.setHours(0,0,0,0);
+      d.setDate(d.getDate() + startOffsetDays);
+      while(out.length < count){
+        if(d.getDay() !== 0 && d.getDay() !== 6){ out.push(new Date(d)); }
+        d.setDate(d.getDate() + 1);
+      }
+      return out;
+    }
+    function tpFmtDay(d){ return TP_DAY_NAMES[d.getDay()] + ' ' + d.getDate() + ' ' + TP_MONTH_NAMES[d.getMonth()]; }
+    function tpFmtHour(h){
+      var period = h < 12 ? 'am' : 'pm';
+      var h12 = h % 12; if(h12 === 0){ h12 = 12; }
+      return h12 + ':00' + period;
+    }
+
+    var tpDaysList = tpNextWeekdays(8, 1); // starts tomorrow, next 8 business days
+    var tpSelectedDayIdx = 0;
+    var tpSelectedHour = null;
+
+    function tpRenderDays(){
+      tpDays.innerHTML = '';
+      tpDaysList.forEach(function(d, i){
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'tp-day' + (i === tpSelectedDayIdx ? ' selected' : '');
+        btn.textContent = tpFmtDay(d);
+        btn.addEventListener('click', function(){
+          tpSelectedDayIdx = i;
+          tpSelectedHour = null;
+          tpRenderDays();
+          tpRenderSlots();
+          tpUpdateSelected();
+        });
+        tpDays.appendChild(btn);
+      });
+    }
+    function tpRenderSlots(){
+      tpSlots.innerHTML = '';
+      TP_HOURS.forEach(function(h){
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'tp-slot' + (h === tpSelectedHour ? ' selected' : '');
+        btn.textContent = tpFmtHour(h);
+        btn.addEventListener('click', function(){
+          tpSelectedHour = h;
+          tpRenderSlots();
+          tpUpdateSelected();
+        });
+        tpSlots.appendChild(btn);
+      });
+    }
+    function tpUpdateSelected(){
+      if(tpSelectedHour === null){
+        tpSelected.textContent = 'No time selected yet.';
+        tpRequestBtn.classList.add('tp-disabled');
+        tpRequestBtn.setAttribute('aria-disabled', 'true');
+        tpRequestBtn.removeAttribute('href');
+        return;
+      }
+      var label = tpFmtDay(tpDaysList[tpSelectedDayIdx]) + ', ' + tpFmtHour(tpSelectedHour) + ' AEDT/AEST';
+      tpSelected.textContent = 'Selected: ' + label;
+      tpRequestBtn.classList.remove('tp-disabled');
+      tpRequestBtn.removeAttribute('aria-disabled');
+      var subject = 'Introductory call request — ' + label;
+      var body = 'Hi Joe,\n\nCould we do the 15-minute introductory call at ' + label + '?\n\n' +
+        'My name: \nCompany: \nBest number/email to reach me: \n\nThanks,';
+      tpRequestBtn.setAttribute('href', 'mailto:info@mentec.com.au?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body));
+    }
+
+    tpRenderDays();
+    tpRenderSlots();
+    tpUpdateSelected();
+  }
 })();

@@ -503,6 +503,21 @@ a.logo-chip[href$="#siric-architects"]{font-size:22px; font-weight:700; color:va
 .field input, .field textarea{border:1px solid var(--line); background:var(--paper-raised); color:var(--text); padding:12px 14px; font-size:15px; font-family:inherit; border-radius:var(--radius);}
 .field input:focus, .field textarea:focus{outline:2px solid var(--steel); outline-offset:1px; border-color:var(--steel);}
 
+/* ---------- TIME PICKER (contact page) ---------- */
+.time-picker{border:1px solid var(--line); background:var(--paper-raised); padding:32px;}
+.tp-days{display:flex; flex-wrap:wrap; gap:8px;}
+.tp-slots{display:flex; flex-wrap:wrap; gap:8px; margin-top:20px;}
+.tp-day, .tp-slot{
+  border:1px solid var(--line); background:var(--paper); color:var(--text);
+  padding:9px 14px; font-size:13.5px; font-family:ui-monospace,monospace;
+  border-radius:var(--radius); cursor:pointer; transition:border-color .15s ease, color .15s ease, background .15s ease;
+}
+.tp-day:hover, .tp-slot:hover{border-color:var(--steel); color:var(--steel);}
+.tp-day.selected, .tp-slot.selected{background:var(--steel); border-color:var(--steel); color:#fff;}
+.tp-footer{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-top:28px; padding-top:20px; border-top:1px solid var(--line);}
+.tp-selected{font-size:14px; color:var(--text-soft);}
+.tp-request-btn.tp-disabled{opacity:0.4; pointer-events:none;}
+
 /* ---------- FOOTER CONTACT BLOCK (shared: footer + contact page) ---------- */
 .foot-contact{display:flex; flex-direction:column; gap:8px; margin-top:18px;}
 .foot-contact li, .foot-contact a{
