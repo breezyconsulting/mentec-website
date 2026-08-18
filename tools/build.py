@@ -16,6 +16,7 @@ ADDRESS = "Suite 6.01, 7 Maitland Pl, Norwest NSW 2153"
 EMAIL = "info@mentec.com.au"
 PHONE = "+61 414 674 353"
 PHONE_TEL = "+61414674353"
+LINKEDIN_URL = "https://au.linkedin.com/in/joe-siric-1985532"
 
 CLIENTS = [
     {
@@ -149,7 +150,7 @@ DESCRIPTIONS = {
     "equity-retainer": "Taking an equity position is optional. When a partner takes one, the retainer is reduced; without it, the retainer is higher. How the trade-off works.",
 }
 
-COMPANY_PAGES = {"approach", "case-studies", "clients", "about"}
+COMPANY_PAGES = {"approach", "case-studies", "clients", "about", "equity-retainer"}
 SERVICES_PAGES = {"services", "digital-strategy-execution", "ecommerce-strategy-execution", "customer-experience-design"}
 
 def nav_html(active):
@@ -194,6 +195,7 @@ def nav_html(active):
             <a class="mega-link" href="case-studies.html"><span class="code">02</span><span class="name">Case Studies</span><span class="desc">Results from real engagements.</span></a>
             <a class="mega-link" href="clients.html"><span class="code">03</span><span class="name">Clients</span><span class="desc">Who we partner with, and why.</span></a>
             <a class="mega-link" href="about.html"><span class="code">04</span><span class="name">About</span><span class="desc">The founder story and the pillars.</span></a>
+            <a class="mega-link" href="equity-retainer.html"><span class="code">05</span><span class="name">Equity &amp; Retainer</span><span class="desc">How the two halves of the model trade off.</span></a>
           </div>
           <div class="mega-promo">
             <div>
@@ -224,6 +226,7 @@ def nav_html(active):
     <a href="case-studies.html">Case Studies</a>
     <a href="clients.html">Clients</a>
     <a href="about.html">About</a>
+    <a href="equity-retainer.html">Equity &amp; Retainer</a>
     <div class="mobile-group-label">More</div>
     <a href="insights.html">Insights</a>
     <a href="contact.html">Contact</a>
@@ -275,7 +278,7 @@ def footer_html():
         <ul>
           <li><a href="insights.html">Insights</a></li>
           <li><a href="contact.html">Contact</a></li>
-          <li><a href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="{LINKEDIN_URL}" target="_blank" rel="noopener">LinkedIn</a></li>
         </ul>
       </div>
     </div>
@@ -1472,8 +1475,11 @@ about_body = f"""
       <p style="margin-top:16px; font-size:16px;">Mentec creates a tailored strategy for each partner, then stays inside the business to help deliver it &mdash; learning from what's worked and what hasn't, so the blueprint fits the business in front of us rather than a template pulled off the shelf.</p>
     </div>
     <div class="founder-card">
-      <div class="initials">JS</div>
-      <h3 style="font-size:19px;">Joe Siric</h3>
+      <img class="founder-photo" src="assets/people/joe-siric.jpg" alt="Joe Siric, Founder of Mentec Business Advisory" width="88" height="88" loading="lazy">
+      <div class="founder-name-row">
+        <h3 style="font-size:19px;">Joe Siric</h3>
+        <a class="founder-linkedin" href="{LINKEDIN_URL}" target="_blank" rel="noopener" aria-label="Joe Siric on LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.86 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"></path></svg></a>
+      </div>
       <p style="font-size:14.5px; margin-top:6px;">Founder, Mentec Business Advisory</p>
       <ul class="credential-list">
         <li>Member, Australian Society of Certified Professional Accountants</li>
@@ -1505,15 +1511,131 @@ write("about", page("about", "About",
     about_body))
 
 # --------------------------------------------------------------- INSIGHTS --
-insights_body = """
+INSIGHTS = [
+    {
+        "id": "five-moves-that-raise-enterprise-value",
+        "category": "Enterprise value",
+        "title": "Five moves that raise what your business is worth &mdash; not just what it earns",
+        "dek": "Why profit and enterprise value diverge, and where to look first.",
+        "body": """
+<p>Two businesses can post the same annual profit and be worth wildly different amounts to a buyer, a lender or an investor. Profit measures what the business made last year. Enterprise value measures how confident someone else is that it'll keep making money &mdash; predictably, without the current owner in the room &mdash; for years after they sign. That gap is where most of the real work sits.</p>
+<p>Here are five of the levers that move it.</p>
+<h3>1. Recurring revenue over one-off wins</h3>
+<p>A dollar of contracted, repeatable revenue is worth more than a dollar won fresh each quarter, because it's a dollar someone else can underwrite. Retainers, subscriptions, service contracts and renewal-heavy customer bases all compress risk for a buyer. If most of the top line resets to zero every January, that's usually the first thing to fix.</p>
+<h3>2. Reduce key-person risk</h3>
+<p>If the business stops functioning the week the founder takes leave, that's a discount on the valuation, not a compliment to the founder. Documented processes, a genuine second layer of leadership and customer relationships that don't run through one mobile number all reduce the risk premium a buyer prices in.</p>
+<h3>3. Clean, defensible financials</h3>
+<p>Numbers that hold up under diligence &mdash; consistent revenue recognition, a clear split between one-off and recurring income, no ambiguity between the owner's personal expenses and the business's &mdash; move faster through a sale process and attract fewer price chips along the way. Messy books don't just cost time; they cost trust, and trust is priced.</p>
+<h3>4. Diversify the customer base</h3>
+<p>A business where one client is 40% of revenue is one contract renewal away from a very different valuation. Spreading concentration risk across more accounts, or building switching costs into the ones you have, is slower work than winning a single big client &mdash; but it's the work a valuation actually rewards.</p>
+<h3>5. A credible growth plan, not just a growth story</h3>
+<p>Buyers and lenders discount a pitch. They pay for a plan &mdash; one with a market sized properly, a resourced path to execute it, and a track record of hitting what was previously forecast. The gap between "we think we could grow 30%" and "here's the plan, the hires and the 18 months of results that support it" is most of the multiple.</p>
+<p>None of these five are quick fixes, and none of them show up on this year's P&amp;L. That's exactly why they tend to get put off &mdash; and why the businesses that start early are the ones with real options when the time comes to sell, raise, or simply stop worrying about what happens if the owner gets hit by a bus.</p>
+""",
+    },
+    {
+        "id": "lender-ready-reporting",
+        "category": "Cash & reporting",
+        "title": "The lender-ready report most SMEs don't have until it's too late",
+        "dek": "What board- and bank-grade reporting actually requires.",
+        "body": """
+<p>Most SME reporting is built to answer one question: did we make money last month? Lender-ready reporting has to answer a harder one: will this business still be able to service its obligations in six months, under a plausible worse case &mdash; and can you prove it before we ask?</p>
+<p>The gap between those two usually isn't accuracy. Most owners can tell you last month's number was right. It's structure, forward visibility and consistency over time &mdash; the three things a lender or a board actually needs and a monthly P&amp;L doesn't provide on its own.</p>
+<h3>What's usually missing</h3>
+<p>A rolling cash flow forecast, updated monthly rather than built from scratch under pressure when the bank asks for one. Covenant headroom tracked against the actual facility terms, not just "we're pretty sure we're fine." Working capital detail &mdash; debtor days, creditor days, stock turn &mdash; broken out rather than buried in a single balance sheet line. And management accounts that are internally consistent month to month, so a reader can trust a trend rather than re-verifying every figure from scratch.</p>
+<h3>What bank-grade reporting includes</h3>
+<p>A rolling 13-week cash flow for short-term visibility, and a 12&ndash;24 month forecast for the medium term. A covenant summary showing where the business actually sits against each facility condition, not just whether repayments have been made. A variance commentary that explains the gap between forecast and actual in plain language &mdash; because an unexplained variance reads as a red flag whether or not it should. And reporting that's produced on a predictable schedule, not assembled in a hurry the week a lender asks for it.</p>
+<h3>Why this matters before you need it</h3>
+<p>The businesses that get the best terms &mdash; on a new facility, an extension, or a covenant reset during a rough quarter &mdash; are the ones that can hand over this pack without a scramble. It signals the business is being run properly, and it puts the owner in a negotiating position instead of a defensive one. Building it after the lender asks is possible, but it's expensive, stressful, and it's happening at the exact moment you have the least leverage to insist on good terms.</p>
+""",
+    },
+    {
+        "id": "why-equity-aligned-advisors-behave-differently",
+        "category": "Partnership model",
+        "title": "Why an equity-aligned advisor behaves differently to an hourly one",
+        "dek": "The incentive problem at the heart of most consulting engagements.",
+        "body": """
+<p>Most advisory relationships are billed by the hour, the day, or the project. On paper that looks like a fair exchange &mdash; time for money. In practice it creates a quiet incentive problem: the advisor gets paid whether or not the recommendation actually works, and gets paid more the longer the engagement runs. Neither of those incentives is aligned with the thing the business owner actually wants, which is a result.</p>
+<p>An equity-aligned model changes the mechanics. When part of the advisor's compensation is a stake in the business rather than an invoice, the advisor's own return depends on the business genuinely becoming more valuable &mdash; not on the number of workshops run or slides produced.</p>
+<h3>What actually changes in practice</h3>
+<p>It changes what gets recommended. An hourly advisor has no particular reason to avoid a longer, more elaborate program of work; an equity-aligned one has a direct reason to recommend the shortest path to a real result, because that's what moves their own return. It changes who stays in the room. Handing over a strategy document and moving to the next client is a reasonable business model when you're paid by the deliverable; it's a bad one when your own upside depends on that strategy actually landing. And it changes what gets said. Telling a client an idea won't work is easier when the advisor's income doesn't depend on that client saying yes to the next phase of work.</p>
+<h3>Where it doesn't fit</h3>
+<p>This model isn't right for every engagement or every business. It requires genuine alignment on where the business is headed, a level of trust that takes longer to establish up front, and a business the advisor is actually willing to take a position in &mdash; which means selectivity on both sides. It's a partnership model, not a faster way to buy the same hours.</p>
+<p>For the businesses it does fit, the difference shows up less in what gets proposed and more in what happens after the proposal &mdash; whether the advisor is still in the building three months later, working through the same problem the business is.</p>
+""",
+    },
+    {
+        "id": "strategy-document-vs-deliverable-plan",
+        "category": "Strategy",
+        "title": "The difference between a strategy document and a deliverable plan",
+        "dek": "Turning a workshop's worth of ideas into owners, milestones and targets.",
+        "body": """
+<p>Most strategy documents are correct. That's rarely the problem. The problem is that a document full of good ideas and a plan that actually gets executed are two different artefacts, built to different standards &mdash; and most engagements stop at the first one.</p>
+<p>A strategy document answers "what should we do." It's usually organised around themes: grow this segment, fix that cost base, enter this channel. It's genuinely useful thinking. It's also, on its own, almost impossible to execute, because nothing in it says who is responsible, by when, with what resources, or how anyone will know it's on track.</p>
+<h3>What a deliverable plan adds</h3>
+<p>An owner for every initiative &mdash; a named person accountable for it, not "the leadership team." A sequence, because most businesses can't run six strategic initiatives at once with the team they have, and pretending otherwise is how nothing finishes. Milestones with dates attached, specific enough that it's obvious within a month whether something is on track or quietly slipping. A resourced budget, so the plan reflects what the business can actually fund rather than what would be ideal in an unconstrained world. And a review cadence &mdash; a standing point where progress against the plan gets checked against reality, not just referenced in passing at the next strategy day.</p>
+<h3>Why this is where most engagements actually fail</h3>
+<p>Turning themes into a sequenced, resourced, owned plan is less interesting work than the strategy session that produced the themes in the first place, and it's usually where an external advisor's involvement ends &mdash; right at the point the hard part begins. The strategy gets filed, the business goes back to its existing rhythm, and six months later the same themes get raised again, sounding a little more urgent each time.</p>
+<p>The fix isn't a better strategy document. It's treating the plan as the deliverable, and staying involved long enough to see it actually run.</p>
+""",
+    },
+    {
+        "id": "virtual-cfo-vs-fractional-cfo",
+        "category": "Virtual CFO",
+        "title": "Virtual CFO vs fractional CFO: same job, different word?",
+        "dek": "What the terms actually mean in Australia, and where Mentec's model differs from both.",
+        "body": """
+<p>"Virtual CFO" and "fractional CFO" get used almost interchangeably in the Australian market, and in most cases that's a fair way to treat them &mdash; both describe senior CFO-level leadership delivered on a part-time or as-needed basis, rather than a full-time in-house hire.</p>
+<p>Where a distinction gets drawn, it's usually this: "fractional" emphasises the time-slice &mdash; a portion of a CFO's week, allocated across a small number of clients, often with a fairly fixed weekly or monthly commitment. "Virtual" emphasises the delivery model &mdash; the CFO isn't in the office full-time and much of the relationship runs remotely, but the scope of the role can flex more with what the business actually needs in a given month.</p>
+<h3>Why the label matters less than the scope</h3>
+<p>In practice, the more useful questions aren't about the term at all. What's actually in scope &mdash; is this board-pack-and-lender-reporting only, or does it extend to strategy and execution? What's the seniority behind it &mdash; genuine CFO-level experience, or a bookkeeper wearing a CFO title? What's the cadence &mdash; a few fixed hours a month, or genuine availability when something urgent comes up? And critically, how is the advisor incentivised &mdash; paid regardless of outcome, or with something riding on the business actually doing well?</p>
+<h3>Where Mentec's model sits</h3>
+<p>Mentec offers virtual CFO leadership, but structured differently to most fractional or virtual arrangements: alongside a reduced retainer, Mentec takes an equity position in the partner business. That changes the incentive from "deliver the agreed hours" to "the business needs to actually get more valuable" &mdash; and it's why the engagement doesn't stop at strategy. The same team that builds the plan stays to help execute it, inside the business, until the results show up in the numbers.</p>
+<p>Whichever term a firm uses, the label is a poor way to evaluate the offer. Scope, seniority, availability and incentive are what actually determine whether the arrangement behaves like a genuine finance partner or a part-time consultant with a CFO title.</p>
+""",
+    },
+    {
+        "id": "virtual-cfo-vs-accountant",
+        "category": "Virtual CFO",
+        "title": "Virtual CFO vs accountant: what founders get wrong",
+        "dek": "Compliance and strategy are different jobs. Most SMEs only have one of them covered.",
+        "body": """
+<p>Almost every SME has an accountant. Very few have a CFO, virtual or otherwise &mdash; and a lot of founders don't realise the gap exists until something forces the question: a lender asks for a forecast nobody's built, a board member asks where enterprise value is actually being created, or growth stalls and it's unclear why.</p>
+<p>The confusion is understandable, because both roles deal in numbers. But they're built to do different jobs.</p>
+<h3>What an accountant is engaged to do</h3>
+<p>Tax compliance, statutory reporting, BAS lodgements, historical bookkeeping &mdash; the record of what already happened, prepared accurately and on time, to meet obligations to the ATO and other regulators. This work is essential, it's specialised, and a good accountant is genuinely hard to replace. It's also, almost by definition, backward-looking: it tells you what the business did, not what it should do next.</p>
+<h3>What's typically missing</h3>
+<p>Forward-looking financial leadership &mdash; cash flow forecasting, scenario planning, pricing and margin strategy, capital structure decisions. Board- and investor-grade judgement on where the business should be investing, and where it's quietly leaking value. And execution: turning a financial view of the business into decisions that actually get made and followed through, not just reported on after the fact.</p>
+<h3>Where the two fit together</h3>
+<p>A virtual CFO isn't a replacement for the accountant &mdash; the compliance work still needs to happen, and still needs a specialist. The value of a virtual CFO is everything the compliance relationship was never built to cover: sitting at the table for the decisions that shape where the business is headed, not just recording where it's been. The businesses that get this right usually keep both relationships running in parallel, each doing the job it's actually suited for.</p>
+<p>The mistake isn't hiring an accountant. It's assuming that relationship was ever meant to cover strategic financial leadership too &mdash; and only finding out otherwise at the exact moment it would have mattered most.</p>
+""",
+    },
+]
+
+for _i, _art in enumerate(INSIGHTS):
+    PAGES.append(_art["id"])
+    SLUG_DIR[_art["id"]] = f"insights/{_art['id']}"
+    TITLES[_art["id"]] = f"{re.sub('<[^<]+?>', '', _art['title'])} | Mentec Insights"
+    DESCRIPTIONS[_art["id"]] = _art["dek"]
+SLUG_TO_FILE = {slug: (d + "/index.html" if d != "." else "index.html") for slug, d in SLUG_DIR.items()}
+SUBPAGE_SLUGS = [s for s in PAGES if s != "home"]
+SUBPAGE_SLUGS.sort(key=len, reverse=True)
+
+def insight_cards_html(exclude_id=None, limit=None):
+    cards = []
+    for art in INSIGHTS:
+        if art["id"] == exclude_id:
+            continue
+        cards.append(f'    <a class="insight-card" data-reveal href="{art["id"]}.html"><span class="cat">{art["category"]}</span><h4>{art["title"]}</h4><p>{art["dek"]}</p></a>')
+        if limit and len(cards) >= limit:
+            break
+    return "\n".join(cards)
+
+insights_body = f"""
 <section class="wrap insights-section" data-reveal>
   <div class="insights-grid">
-    <div class="insight-card"><span class="cat">Enterprise value</span><h4>Five moves that raise what your business is worth &mdash; not just what it earns</h4><p>Why profit and enterprise value diverge, and where to look first.</p></div>
-    <div class="insight-card"><span class="cat">Cash &amp; reporting</span><h4>The lender-ready report most SMEs don't have until it's too late</h4><p>What board- and bank-grade reporting actually requires.</p></div>
-    <div class="insight-card"><span class="cat">Partnership model</span><h4>Why an equity-aligned advisor behaves differently to an hourly one</h4><p>The incentive problem at the heart of most consulting engagements.</p></div>
-    <div class="insight-card"><span class="cat">Strategy</span><h4>The difference between a strategy document and a deliverable plan</h4><p>Turning a workshop's worth of ideas into owners, milestones and targets.</p></div>
-    <div class="insight-card"><span class="cat">Virtual CFO</span><h4>Virtual CFO vs fractional CFO: same job, different word?</h4><p>What the terms actually mean in Australia, and where Mentec's model differs from both.</p></div>
-    <div class="insight-card"><span class="cat">Virtual CFO</span><h4>Virtual CFO vs accountant: what founders get wrong</h4><p>Compliance and strategy are different jobs. Most SMEs only have one of them covered.</p></div>
+{insight_cards_html()}
   </div>
 </section>
 
@@ -1529,6 +1651,28 @@ write("insights", page("insights", "Insights",
     "Field notes on running the finance function properly.",
     "A content pillar for search visibility, and a way to show CFO-level thinking before the first call.",
     insights_body))
+
+for art in INSIGHTS:
+    article_body = f"""
+<section class="wrap" data-reveal>
+  <div class="article-body">
+    {art['body'].strip()}
+  </div>
+  {mini_cta("Want this applied to your business specifically, not in the abstract?", button_label="Book an introductory call")}
+</section>
+
+<section class="wrap" data-reveal style="margin-top:24px;">
+  <div class="section-head" style="margin-bottom:24px;">
+    <span class="eyebrow">More insights</span>
+    <h2 style="font-size:22px;">Related reading.</h2>
+  </div>
+  <div class="insights-grid">
+{insight_cards_html(exclude_id=art['id'], limit=3)}
+  </div>
+</section>
+"""
+    write(art["id"], page(art["id"], art["category"], art["title"], art["dek"],
+        article_body, parent=("Insights", "insights")))
 
 # ---------------------------------------------------------------- CONTACT --
 contact_body = f"""

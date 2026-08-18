@@ -431,6 +431,11 @@ a.logo-chip[href$="#siric-architects"]{font-size:22px; font-weight:700; color:va
 @media (max-width:800px){.about-grid{grid-template-columns:1fr;}}
 .founder-card{border:1px solid var(--line); background:var(--paper-raised); padding:32px;}
 .founder-card .initials{width:56px;height:56px; border:1.5px solid var(--steel); color:var(--steel); display:flex; align-items:center; justify-content:center; font-family:Iowan Old Style, Georgia, serif; font-size:20px; margin-bottom:20px;}
+.founder-card .founder-photo{width:88px; height:88px; border-radius:50%; object-fit:cover; margin-bottom:20px; display:block;}
+.founder-card .founder-name-row{display:flex; align-items:center; gap:10px;}
+.founder-card .founder-linkedin{display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; color:var(--text-soft); transition:color .15s ease;}
+.founder-card .founder-linkedin:hover{color:var(--steel);}
+.founder-card .founder-linkedin svg{width:16px; height:16px; fill:currentColor;}
 .credential-list{list-style:none; margin:20px 0 0; padding:0; display:flex; flex-direction:column; gap:10px;}
 .credential-list li{font-size:14.5px; color:var(--text-soft); display:flex; gap:10px;}
 .credential-list li::before{content:"—"; color:var(--steel);}
@@ -479,10 +484,16 @@ a.logo-chip[href$="#siric-architects"]{font-size:22px; font-weight:700; color:va
 /* ---------- INSIGHTS ---------- */
 .insights-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
 @media (max-width:900px){.insights-grid{grid-template-columns:1fr;}}
-.insight-card{border-top:2px solid var(--steel); padding-top:18px;}
+.insight-card{border-top:2px solid var(--steel); padding-top:18px; display:block; text-decoration:none; transition:opacity .15s ease;}
+.insight-card:hover{opacity:0.75;}
 .insight-card .cat{font-family:ui-monospace,monospace; font-size:11.5px; color:var(--slate); letter-spacing:0.08em; text-transform:uppercase;}
-.insight-card h4{font-size:17px; margin-top:10px; line-height:1.3;}
-.insight-card p{font-size:14.5px; margin-top:10px;}
+.insight-card h4{font-size:17px; margin-top:10px; line-height:1.3; color:var(--ink);}
+.insight-card p{font-size:14.5px; margin-top:10px; color:var(--text-soft);}
+
+/* ---------- ARTICLE (individual insight page) ---------- */
+.article-body{max-width:68ch; margin:0 auto;}
+.article-body p{font-size:16px; line-height:1.7; margin-top:18px; color:var(--text);}
+.article-body h3{font-size:20px; margin-top:40px; margin-bottom:2px; line-height:1.3;}
 
 /* ---------- CONTACT ---------- */
 .contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px;}
