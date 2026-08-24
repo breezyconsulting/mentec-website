@@ -1693,13 +1693,13 @@ contact_body = f"""
     <div class="section-head" style="margin-bottom:0;">
       <span class="eyebrow">Pick a time</span>
       <h2 style="font-size:22px;">See a slot that works? Request it directly.</h2>
-      <p style="font-size:14.5px; color:var(--text-soft); margin-top:8px;">Weekdays, 9am&ndash;5pm. Picking a time drafts an email requesting that slot &mdash; Joe confirms it by reply, it isn't an automatic booking.</p>
+      <p style="font-size:14.5px; color:var(--text-soft); margin-top:8px;">Weekdays, 9am&ndash;5pm. Picking a time adds it to the message below &mdash; send the form and Joe confirms by reply, it isn't an automatic booking.</p>
     </div>
     <div class="tp-days" id="tpDays" style="margin-top:24px;"></div>
     <div class="tp-slots" id="tpSlots"></div>
     <div class="tp-footer">
       <span class="tp-selected" id="tpSelected">No time selected yet.</span>
-      <a href="#" id="tpRequestBtn" class="btn btn-primary tp-request-btn tp-disabled" aria-disabled="true">Request this time</a>
+      <button type="button" id="tpRequestBtn" class="btn btn-primary tp-request-btn tp-disabled" aria-disabled="true">Use this time</button>
     </div>
   </div>
 </section>
@@ -1709,13 +1709,18 @@ contact_body = f"""
     <div>
       <span class="eyebrow">Enquire</span>
       <h2 style="margin-top:14px; font-size:24px;">Tell us about the business.</h2>
-      <p style="margin-top:12px; font-size:14.5px; color:var(--text-soft);">Opens in your email client, addressed straight to Mentec.</p>
-      <form style="margin-top:24px;" action="mailto:{EMAIL}" method="post" enctype="text/plain">
+      <p style="margin-top:12px; font-size:14.5px; color:var(--text-soft);">Sent straight through to Mentec &mdash; no email client required.</p>
+      <form style="margin-top:24px;" id="contactForm">
+        <input type="hidden" name="_subject" value="New enquiry — Mentec website">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
         <div class="field"><label for="fname">Name</label><input id="fname" name="Name" type="text" placeholder="Jordan Blake" required></div>
         <div class="field"><label for="fcompany">Company</label><input id="fcompany" name="Company" type="text" placeholder="Business name"></div>
         <div class="field"><label for="femail">Email</label><input id="femail" name="Email" type="email" placeholder="you@company.com.au" required></div>
         <div class="field"><label for="fmsg">What's going on?</label><textarea id="fmsg" name="Message" rows="4" placeholder="A line or two on where the business is stuck."></textarea></div>
         <button type="submit" class="btn btn-primary">Request an introductory call</button>
+        <p class="form-status" id="contactStatus" role="status" aria-live="polite" hidden></p>
       </form>
     </div>
     <div>

@@ -279,7 +279,8 @@ setTimeout(function(){
   });
 
   // time picker (contact page) — every weekday/hour slot shown is genuinely
-  // open; picking one drafts a real mailto request, it does not book
+  // open; picking one adds it to the real contact form's message below
+  // (no mailto -- it's part of the same submission), and does not book
   // anything automatically. No slot is ever hidden or marked unavailable.
   var tpDays = document.getElementById('tpDays');
   var tpSlots = document.getElementById('tpSlots');
@@ -344,26 +345,77 @@ setTimeout(function(){
         tpSlots.appendChild(btn);
       });
     }
+    function tpCurrentLabel(){
+      return tpFmtDay(tpDaysList[tpSelectedDayIdx]) + ', ' + tpFmtHour(tpSelectedHour) + ' AEDT/AEST';
+    }
     function tpUpdateSelected(){
       if(tpSelectedHour === null){
         tpSelected.textContent = 'No time selected yet.';
         tpRequestBtn.classList.add('tp-disabled');
         tpRequestBtn.setAttribute('aria-disabled', 'true');
-        tpRequestBtn.removeAttribute('href');
         return;
       }
-      var label = tpFmtDay(tpDaysList[tpSelectedDayIdx]) + ', ' + tpFmtHour(tpSelectedHour) + ' AEDT/AEST';
-      tpSelected.textContent = 'Selected: ' + label;
+      tpSelected.textContent = 'Selected: ' + tpCurrentLabel();
       tpRequestBtn.classList.remove('tp-disabled');
       tpRequestBtn.removeAttribute('aria-disabled');
-      var subject = 'Introductory call request — ' + label;
-      var body = 'Hi Joe,\n\nCould we do the 15-minute introductory call at ' + label + '?\n\n' +
-        'My name: \nCompany: \nBest number/email to reach me: \n\nThanks,';
-      tpRequestBtn.setAttribute('href', 'mailto:info@mentec.com.au?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body));
     }
+
+    tpRequestBtn.addEventListener('click', function(){
+      if(tpSelectedHour === null || tpRequestBtn.classList.contains('tp-disabled')) return;
+      var label = tpCurrentLabel();
+      var marker = 'Requested call time: ' + label;
+      var msgField = document.getElementById('fmsg');
+      if(msgField){
+        var firstLine = msgField.value.split('\n')[0];
+        if(firstLine.indexOf('Requested call time:') === 0){
+          msgField.value = marker + msgField.value.slice(firstLine.length);
+        } else {
+          msgField.value = marker + (msgField.value ? '\n\n' + msgField.value : '');
+        }
+      }
+      var form = document.getElementById('contactForm');
+      if(form && form.scrollIntoView){ form.scrollIntoView({behavior:'smooth', block:'start'}); }
+      if(msgField){ msgField.focus(); }
+      tpSelected.textContent = 'Added to your message below — send the form to request it.';
+    });
 
     tpRenderDays();
     tpRenderSlots();
     tpUpdateSelected();
+  }
+
+  // contact form — real AJAX submission (FormSubmit.co) straight to
+  // info@mentec.com.au, no mailto: redirect. Keeps a visible success AND
+  // error state so a failed send never silently looks like it worked.
+  var contactForm = document.getElementById('contactForm');
+  if(contactForm){
+    var contactStatus = document.getElementById('contactStatus');
+    var contactSubmitBtn = contactForm.querySelector('button[type="submit"]');
+    var contactSubmitLabel = contactSubmitBtn ? contactSubmitBtn.textContent : '';
+    contactForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(contactSubmitBtn){ contactSubmitBtn.disabled = true; contactSubmitBtn.textContent = 'Sending…'; }
+      contactStatus.hidden = true;
+      contactStatus.className = 'form-status';
+      fetch('https://formsubmit.co/ajax/info@mentec.com.au', {
+        method: 'POST',
+        headers: {'Accept': 'application/json'},
+        body: new FormData(contactForm)
+      }).then(function(res){
+        if(!res.ok){ throw new Error('request failed'); }
+        return res.json();
+      }).then(function(){
+        contactForm.reset();
+        contactStatus.textContent = "Thanks — that's through to Mentec. We'll be in touch shortly.";
+        contactStatus.className = 'form-status success';
+        contactStatus.hidden = false;
+      }).catch(function(){
+        contactStatus.textContent = 'Something went wrong sending that. Please email info@mentec.com.au directly, or call +61 414 674 353.';
+        contactStatus.className = 'form-status error';
+        contactStatus.hidden = false;
+      }).finally(function(){
+        if(contactSubmitBtn){ contactSubmitBtn.disabled = false; contactSubmitBtn.textContent = contactSubmitLabel; }
+      });
+    });
   }
 })();
