@@ -5,7 +5,7 @@ Regenerates the .html files in the repo root from the templates below.
 Kept in the repo so future content edits don't require hand-editing eight
 files with duplicated nav/footer markup.
 """
-import os, re, json, math
+import os, re, json
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_URL = "https://breezyconsulting.github.io/mentec-website/"  # replaced by deploy.sh once the Pages URL is known
@@ -483,9 +483,9 @@ CHART_SERIES = [
     # Client 1: 121% improvement -> indexed 100 to 221
     {"id": "revenue", "label": "Client 1", "role": "series-1", "fill": True,
      "values": _growth_curve(221)},
-    # Client 2: $40k to $2m -> +4900% -> indexed 100 to 5000
+    # Client 2: $400k to $2m -> +400% -> indexed 100 to 500
     {"id": "profit", "label": "Client 2", "role": "series-2", "fill": True,
-     "values": _growth_curve(5000)},
+     "values": _growth_curve(500)},
     # Client 3: $200k to $600k -> +200% -> indexed 100 to 300
     {"id": "cost", "label": "Client 3", "role": "series-3", "fill": True,
      "values": _growth_curve(300)},
@@ -493,16 +493,13 @@ CHART_SERIES = [
 CHART_VW, CHART_VH = 720, 300
 CHART_X0, CHART_X1 = 12, 630
 CHART_Y0, CHART_Y1 = 26, 244  # y0 = top (max value), y1 = bottom (min value)
-# Log scale: Client 2's 50x result and Client 1/3's ~2-3x results span two
-# orders of magnitude, so a linear axis would flatten the smaller two lines
-# against the bottom of the chart.
-CHART_YMIN, CHART_YMAX = 90, 6000
+CHART_YMIN, CHART_YMAX = 90, 520
 
 def _cx(i):
     return CHART_X0 + (i / (len(CHART_MONTHS) - 1)) * (CHART_X1 - CHART_X0)
 
 def _cy(v):
-    t = (math.log(v) - math.log(CHART_YMIN)) / (math.log(CHART_YMAX) - math.log(CHART_YMIN))
+    t = (v - CHART_YMIN) / (CHART_YMAX - CHART_YMIN)
     return CHART_Y1 - t * (CHART_Y1 - CHART_Y0)
 
 def _smooth_path_d(values):
@@ -533,7 +530,7 @@ def sales_chart_svg():
     baseline_y = _cy(100)
     gridlines = "\n".join(
         f'      <line x1="{CHART_X0}" y1="{_cy(v):.1f}" x2="{CHART_X1}" y2="{_cy(v):.1f}" class="chart-grid"/>'
-        for v in (100, 300, 1000, 3000)
+        for v in (100, 200, 300, 400, 500)
     )
     x_labels = "\n".join(
         f'      <text x="{_cx(m):.1f}" y="{CHART_Y1 + 22}" class="chart-axis-label" text-anchor="middle">M{m}</text>'
