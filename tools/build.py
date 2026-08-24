@@ -1209,7 +1209,7 @@ approach_body = """
     <table class="compare">
       <thead><tr><th></th><th>Traditional consultant</th><th>Mentec partnership</th></tr></thead>
       <tbody>
-        <tr><td>How they're paid</td><td>Hourly or fixed fee, regardless of outcome</td><td class="yes">Equity position + reduced retainer</td></tr>
+        <tr><td>How they're paid</td><td>Hourly or fixed fee, regardless of outcome</td><td class="yes">Equity and/or retainer</td></tr>
         <tr><td>What they deliver</td><td>A strategy document or slide deck</td><td class="yes">A strategy, a plan, and hands-on delivery</td></tr>
         <tr><td>Where they sit</td><td>Outside the business, engagement by engagement</td><td class="yes">Inside the business, through delivery</td></tr>
         <tr><td>What happens after sign-off</td><td>The engagement typically ends</td><td class="yes">The work continues &mdash; this is where value is created</td></tr>
