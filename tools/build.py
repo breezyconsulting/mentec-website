@@ -725,7 +725,7 @@ home_body = f"""
     <div class="ledger-card" data-reveal>
       <div class="ledger-head"><span class="eyebrow" style="margin:0;">On the ledger</span></div>
       <div class="ledger-row"><span class="k">Senior CFO experience</span><span class="v tabular">30+ yrs</span></div>
-      <div class="ledger-row"><span class="k">Equity and/or retainer</span><span class="v" style="font-size:15px;">Equity<a href="equity-retainer.html" class="inline-link" title="Equity is optional — see how it trades off against the retainer">*</a> + retainer</span></div>
+      <div class="ledger-row"><span class="k">How we get paid</span><span class="v" style="font-size:15px;">Equity<a href="equity-retainer.html" class="inline-link" title="Equity is optional — see how it trades off against the retainer">*</a> and/or retainer</span></div>
       <div class="ledger-row"><span class="k">Where advice ends</span><span class="v" style="font-size:15px;">It doesn't &mdash; we execute</span></div>
       <div class="ledger-row"><span class="k">Who it's for</span><span class="v" style="font-size:15px;">SME, strong model</span></div>
     </div>
