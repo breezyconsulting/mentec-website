@@ -17,6 +17,7 @@ EMAIL = "info@mentec.com.au"
 PHONE = "+61 414 674 353"
 PHONE_TEL = "+61414674353"
 LINKEDIN_URL = "https://au.linkedin.com/in/joe-siric-1985532"
+GA_MEASUREMENT_ID = "G-M35NTS9K91"
 
 CLIENTS = [
     {
@@ -322,6 +323,15 @@ def head(slug):
     return f"""<!doctype html>
 <html lang="en-AU">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+
+  gtag('config', '{GA_MEASUREMENT_ID}');
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
