@@ -5,7 +5,7 @@ Regenerates the .html files in the repo root from the templates below.
 Kept in the repo so future content edits don't require hand-editing eight
 files with duplicated nav/footer markup.
 """
-import os, re, json
+import os, re, json, math
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_URL = "https://breezyconsulting.github.io/mentec-website/"  # replaced by deploy.sh once the Pages URL is known
@@ -461,28 +461,48 @@ def client_chip_row():
         rows.append(f'        <a href="clients.html#{c["id"]}" class="logo-chip">{inner}</a>')
     return "\n".join(rows)
 
-# ---- Impact chart: indexed Revenue / Profit / Operating Cost over a typical
-# 12-month engagement. Dummy/illustrative data — never presented as a real
-# client's figures (labelled as such on the chart itself).
+# ---- Impact chart: indexed results for three real client outcomes over a
+# 12-month engagement. The endpoint of each line is a real result (see the
+# individual figures below); the month-by-month shape between start and
+# that endpoint is an illustrative smoothstep curve, not real monthly data
+# — hence "Illustrative" on the chart itself, without implying every point
+# on the line is a measured figure.
+def _growth_curve(final, months=12):
+    """Indexed-100 smoothstep ease from 100 to `final` — a believable
+    engagement shape (slow start while diagnosis/planning happens, then
+    accelerating), computed rather than hand-typed."""
+    vals = []
+    for m in range(months + 1):
+        t = m / months
+        s = t * t * (3 - 2 * t)  # smoothstep easing
+        vals.append(round(100 + (final - 100) * s))
+    return vals
+
 CHART_MONTHS = list(range(13))
 CHART_SERIES = [
-    {"id": "revenue", "label": "Revenue (indexed)", "role": "series-1", "fill": True,
-     "values": [100,104,109,113,119,124,129,133,137,141,145,148,152]},
-    {"id": "profit", "label": "Profit (indexed)", "role": "series-2", "fill": True,
-     "values": [100,103,108,118,128,136,144,151,157,163,168,172,176]},
-    {"id": "cost", "label": "Operating cost (indexed)", "role": "series-3", "fill": False,
-     "values": [100,99,97,94,92,90,88,87,86,85,84,83,82]},
+    # Client 1: 121% improvement -> indexed 100 to 221
+    {"id": "revenue", "label": "Client 1", "role": "series-1", "fill": True,
+     "values": _growth_curve(221)},
+    # Client 2: $40k to $2m -> +4900% -> indexed 100 to 5000
+    {"id": "profit", "label": "Client 2", "role": "series-2", "fill": True,
+     "values": _growth_curve(5000)},
+    # Client 3: $200k to $600k -> +200% -> indexed 100 to 300
+    {"id": "cost", "label": "Client 3", "role": "series-3", "fill": True,
+     "values": _growth_curve(300)},
 ]
 CHART_VW, CHART_VH = 720, 300
 CHART_X0, CHART_X1 = 12, 630
 CHART_Y0, CHART_Y1 = 26, 244  # y0 = top (max value), y1 = bottom (min value)
-CHART_YMIN, CHART_YMAX = 76, 182
+# Log scale: Client 2's 50x result and Client 1/3's ~2-3x results span two
+# orders of magnitude, so a linear axis would flatten the smaller two lines
+# against the bottom of the chart.
+CHART_YMIN, CHART_YMAX = 90, 6000
 
 def _cx(i):
     return CHART_X0 + (i / (len(CHART_MONTHS) - 1)) * (CHART_X1 - CHART_X0)
 
 def _cy(v):
-    t = (v - CHART_YMIN) / (CHART_YMAX - CHART_YMIN)
+    t = (math.log(v) - math.log(CHART_YMIN)) / (math.log(CHART_YMAX) - math.log(CHART_YMIN))
     return CHART_Y1 - t * (CHART_Y1 - CHART_Y0)
 
 def _smooth_path_d(values):
@@ -513,7 +533,7 @@ def sales_chart_svg():
     baseline_y = _cy(100)
     gridlines = "\n".join(
         f'      <line x1="{CHART_X0}" y1="{_cy(v):.1f}" x2="{CHART_X1}" y2="{_cy(v):.1f}" class="chart-grid"/>'
-        for v in (80, 100, 130, 160)
+        for v in (100, 300, 1000, 3000)
     )
     x_labels = "\n".join(
         f'      <text x="{_cx(m):.1f}" y="{CHART_Y1 + 22}" class="chart-axis-label" text-anchor="middle">M{m}</text>'
@@ -551,13 +571,6 @@ def sales_chart_svg():
         f'<i class="chart-swatch" data-series="{s["id"]}"></i>{s["label"]}</button>'
         for s in CHART_SERIES
     )
-    table_rows = "\n".join(
-        "        <tr><td>Month {}</td>{}</tr>".format(
-            m, "".join(f"<td>{s['values'][m]}</td>" for s in CHART_SERIES)
-        )
-        for m in CHART_MONTHS
-    )
-    table_head = "".join(f"<th>{s['label']}</th>" for s in CHART_SERIES)
     chart_payload = json.dumps({
         "months": CHART_MONTHS,
         "series": [{"id": s["id"], "label": s["label"], "values": s["values"]} for s in CHART_SERIES],
@@ -569,16 +582,16 @@ def sales_chart_svg():
     <div class="chart-card" data-reveal>
       <div class="chart-head">
         <div>
-          <span class="eyebrow">Illustrative &mdash; dummy data</span>
-          <h3>What tends to happen to the numbers.</h3>
-          <p>A typical shape for a 12-month partnership, indexed to 100 at the start. Not a specific client's figures &mdash; see the <a href="case-studies.html" class="inline-link">real case studies</a> for actual results.</p>
+          <span class="eyebrow">Illustrative</span>
+          <h3>What real partnerships have delivered.</h3>
+          <p>Indexed to 100 at the start. The month-by-month climb is illustrative, but the results are real &mdash; three client outcomes over a 12-month partnership. See the <a href="case-studies.html" class="inline-link">real case studies</a> for the full picture.</p>
         </div>
         <div class="chart-legend">
 {legend}
         </div>
       </div>
       <div class="chart-svg-wrap">
-        <svg viewBox="0 0 {CHART_VW} {CHART_VH}" class="chart-svg" role="img" aria-label="Indexed revenue, profit and operating cost over a 12-month illustrative engagement" data-chart='{chart_payload}'>
+        <svg viewBox="0 0 {CHART_VW} {CHART_VH}" class="chart-svg" role="img" aria-label="Indexed results for three client outcomes over a 12-month illustrative engagement: Client 1, Client 2, Client 3" data-chart='{chart_payload}'>
           <defs>
 {defs}
           </defs>
@@ -594,17 +607,6 @@ def sales_chart_svg():
         </svg>
         <div class="chart-tooltip" hidden></div>
       </div>
-      <details class="chart-table-toggle">
-        <summary>View as a data table</summary>
-        <div class="table-wrap">
-          <table class="compare chart-table">
-            <thead><tr><th>Month</th>{table_head}</tr></thead>
-            <tbody>
-{table_rows}
-            </tbody>
-          </table>
-        </div>
-      </details>
     </div>
 """
 
@@ -844,8 +846,11 @@ home_body = f"""
       <p style="margin-top:24px;"><a href="about.html" class="inline-link" style="font-family:ui-monospace,monospace; font-size:13px; letter-spacing:0.04em;">Read the full story &amp; business pillars &rarr;</a></p>
     </div>
     <div class="founder-card">
-      <div class="initials">JS</div>
-      <h3 style="font-size:19px;">Joe Siric</h3>
+      <img class="founder-photo" src="assets/people/joe-siric.jpg" alt="Joe Siric, Founder of Mentec Business Advisory" width="88" height="88" loading="lazy">
+      <div class="founder-name-row">
+        <h3 style="font-size:19px;">Joe Siric</h3>
+        <a class="founder-linkedin" href="{LINKEDIN_URL}" target="_blank" rel="noopener" aria-label="Joe Siric on LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.86 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"></path></svg></a>
+      </div>
       <p style="font-size:14.5px; margin-top:6px;">Founder, Mentec Business Advisory</p>
       <ul class="credential-list">
         <li>Member, Australian Society of Certified Professional Accountants</li>

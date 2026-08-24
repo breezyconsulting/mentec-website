@@ -151,7 +151,9 @@ setTimeout(function(){
     svg.querySelectorAll('.chart-hover-dot').forEach(function(d){ hoverDots[d.getAttribute('data-series')] = d; });
 
     function yFor(v){
-      var t = (v - data.ymin) / (data.ymax - data.ymin);
+      // log scale — matches the Python-side geometry (data spans two orders
+      // of magnitude across the three client outcomes)
+      var t = (Math.log(v) - Math.log(data.ymin)) / (Math.log(data.ymax) - Math.log(data.ymin));
       return data.y1 - t * (data.y1 - data.y0);
     }
     function xFor(i){ return data.x0 + (i / (data.months.length - 1)) * (data.x1 - data.x0); }
