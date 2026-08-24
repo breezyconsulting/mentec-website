@@ -404,7 +404,10 @@ setTimeout(function(){
       }).then(function(res){
         if(!res.ok){ throw new Error('request failed'); }
         return res.json();
-      }).then(function(){
+      }).then(function(data){
+        // FormSubmit can return HTTP 200 with a body reporting failure (e.g.
+        // {"success":"false", ...}) -- res.ok alone isn't enough to trust.
+        if(!data || String(data.success).toLowerCase() !== 'true'){ throw new Error('formsubmit reported failure'); }
         contactForm.reset();
         contactStatus.textContent = "Thanks — that's through to Mentec. We'll be in touch shortly.";
         contactStatus.className = 'form-status success';
