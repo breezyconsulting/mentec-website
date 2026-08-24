@@ -5,13 +5,13 @@ refreshed brand styling (same logo mark and blue/grey palette as the current
 site, sharpened), a mega nav, and dedicated pages for Services, Approach,
 Case Studies, Clients, About, Insights and Contact.
 
-## Status: staging preview
+## Status: live
 
-This is **not** the live site. It's deployed separately (GitHub Pages) so it
-can be reviewed before anything touches the real domain. `robots.txt`
-disallows all crawling and every page carries a `noindex` meta tag, so it
-won't compete with the real mentec.com.au in search results while it's
-being reviewed.
+Prepped for the real domain: `BASE_URL` is `https://www.mentec.com.au/`,
+`NOINDEX` is off, `robots.txt` allows crawling, and a `CNAME` file
+(`www.mentec.com.au`) is committed for GitHub Pages' custom domain
+feature. DNS/hosting still needs pointing at this GitHub Pages deploy for
+the domain to actually resolve here — see "Going live for real" below.
 
 Content notes:
 - The five clients on the Clients / Case Studies pages (Siric Architects,
@@ -66,10 +66,13 @@ python3 -m http.server 8000
 
 ## Going live for real
 
-When this is ready to replace the live site:
-1. Set `BASE_URL` in `tools/build.py` to the real domain and set
-   `NOINDEX = False`, then rerun the build.
-2. Remove the `Disallow: /` from `robots.txt`.
-3. Point the real domain's DNS/hosting at this build (or copy these files
-   into the existing host), and set up 301 redirects from any old indexed
-   Wix URLs if their paths differ.
+1. ~~Set `BASE_URL` in `tools/build.py` to the real domain and set
+   `NOINDEX = False`, then rerun the build.~~ Done.
+2. ~~Remove the `Disallow: /` from `robots.txt`.~~ Done.
+3. Point `www.mentec.com.au`'s DNS (a CNAME record) at
+   `breezyconsulting.github.io`, and in the GitHub repo's Settings → Pages,
+   confirm the custom domain is `www.mentec.com.au` and enable "Enforce
+   HTTPS" once DNS has propagated (GitHub provisions the certificate
+   automatically once it can verify the CNAME). Set up 301 redirects from
+   any old indexed Wix URLs if their paths differ, and redirect the bare
+   `mentec.com.au` apex to `www.mentec.com.au` at the registrar/DNS level.
