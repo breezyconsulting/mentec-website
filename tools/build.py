@@ -1603,7 +1603,7 @@ INSIGHTS = [
 <p>In practice, the more useful questions aren't about the term at all. What's actually in scope &mdash; is this board-pack-and-lender-reporting only, or does it extend to strategy and execution? What's the seniority behind it &mdash; genuine CFO-level experience, or a bookkeeper wearing a CFO title? What's the cadence &mdash; a few fixed hours a month, or genuine availability when something urgent comes up? And critically, how is the advisor incentivised &mdash; paid regardless of outcome, or with something riding on the business actually doing well?</p>
 <h3>Where Mentec's model sits</h3>
 <p>Mentec offers virtual CFO leadership, but structured differently to most fractional or virtual arrangements: alongside a reduced retainer, Mentec takes an equity position in the partner business. That changes the incentive from "deliver the agreed hours" to "the business needs to actually get more valuable" &mdash; and it's why the engagement doesn't stop at strategy. The same team that builds the plan stays to help execute it, inside the business, until the results show up in the numbers.</p>
-<p>Whichever term a firm uses, the label is a poor way to evaluate the offer. Scope, seniority, availability and incentive are what actually determine whether the arrangement behaves like a genuine finance partner or a part-time consultant with a CFO title.</p>
+<p>Whichever term a firm uses, the label is a poor way to evaluate the offer. Scope, seniority, availability and incentive are what actually determine whether the arrangement behaves like a genuine finance partner or a part-time consultant with a CFO title &mdash; and they're also the things that actually drive <a href="virtual-cfo-cost-australia.html" class="inline-link">what it costs</a>.</p>
 """,
     },
     {
@@ -1621,6 +1621,21 @@ INSIGHTS = [
 <h3>Where the two fit together</h3>
 <p>A virtual CFO isn't a replacement for the accountant &mdash; the compliance work still needs to happen, and still needs a specialist. The value of a virtual CFO is everything the compliance relationship was never built to cover: sitting at the table for the decisions that shape where the business is headed, not just recording where it's been. The businesses that get this right usually keep both relationships running in parallel, each doing the job it's actually suited for.</p>
 <p>The mistake isn't hiring an accountant. It's assuming that relationship was ever meant to cover strategic financial leadership too &mdash; and only finding out otherwise at the exact moment it would have mattered most.</p>
+""",
+    },
+    {
+        "id": "virtual-cfo-cost-australia",
+        "category": "Virtual CFO",
+        "title": "How much does a virtual CFO cost in Australia?",
+        "dek": "What actually drives the price, and the comparison that matters more than the rate card.",
+        "body": """
+<p>It's usually one of the first questions a business owner asks, and one of the hardest to get a straight answer to &mdash; because "virtual CFO" covers a wide range of scope and seniority, and the price moves with both. Understanding what actually drives the number matters more than the number itself. It's what lets an owner tell a fair quote from an inflated one, and a cheap one from a genuinely underpowered one.</p>
+<h3>What the price actually reflects</h3>
+<p>Three things move the cost more than anything else. Seniority &mdash; genuine CFO-level experience, built across multiple businesses and a few economic cycles, costs more than a senior bookkeeper or a part-qualified accountant operating under a CFO title, and the gap in judgement shows up exactly when it matters most. Scope &mdash; a retainer covering board packs and lender reporting only is priced differently to one that extends into strategy, capital raising support and hands-on execution inside the business. And cadence &mdash; a handful of fixed hours each month costs less than genuine on-call availability for the weeks something urgent actually happens, which is rarely spread evenly across the calendar.</p>
+<p>Most engagements in the Australian market are structured one of three ways: a fixed monthly retainer for an agreed scope of work, a day-rate or hourly arrangement billed as work is done, or a hybrid that combines a base retainer with additional hours for larger pieces of work. Retainers are easier to budget against. Day rates flex better for a business whose needs vary month to month, but they're harder to predict in a lean one. Neither structure is inherently better &mdash; it depends on how predictable the business's own workload actually is.</p>
+<h3>The comparison that actually matters</h3>
+<p>The number worth anchoring against isn't a competitor's rate card &mdash; it's the fully-loaded cost of the alternative. A full-time CFO hire in Sydney carries a base salary, superannuation, leave entitlements, on-costs and recruitment risk on top of whatever the salary figure suggests, and it's a fixed cost whether or not the business has a CFO-sized problem to solve that particular quarter. A virtual CFO arrangement is priced to flex with what the business actually needs, which is usually the entire point of choosing one in the first place.</p>
+<p>The more useful question than "what does it cost" is "what does it cost relative to the decisions it's informing." A CFO-level view on a pricing decision, a lending negotiation or a growth investment can move outcomes worth many multiples of a monthly retainer &mdash; and a business without that view often doesn't find out what it cost them until well after the decision's been made. Mentec's own model departs from a straightforward fee for exactly this reason: a reduced retainer paired with an equity stake keeps the upfront cost to the business lower, while tying the advisor's own return to the same outcomes the business is paying to achieve. Whatever the structure on offer, the honest way to evaluate cost is against the size of the decisions a genuine CFO-level view actually touches &mdash; not against an hourly rate sitting on its own.</p>
 """,
     },
 ]
