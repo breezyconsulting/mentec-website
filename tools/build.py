@@ -1638,6 +1638,22 @@ INSIGHTS = [
 <p>The more useful question than "what does it cost" is "what does it cost relative to the decisions it's informing." A CFO-level view on a pricing decision, a lending negotiation or a growth investment can move outcomes worth many multiples of a monthly retainer &mdash; and a business without that view often doesn't find out what it cost them until well after the decision's been made. Mentec's own model departs from a straightforward fee for exactly this reason: a reduced retainer paired with an equity stake keeps the upfront cost to the business lower, while tying the advisor's own return to the same outcomes the business is paying to achieve. Whatever the structure on offer, the honest way to evaluate cost is against the size of the decisions a genuine CFO-level view actually touches &mdash; not against an hourly rate sitting on its own.</p>
 """,
     },
+    {
+        "id": "when-does-a-business-need-a-cfo",
+        "category": "Virtual CFO",
+        "title": "When does a business actually need a CFO?",
+        "dek": "Revenue is a rough guide. The real signal is in the decisions being made without one.",
+        "body": """
+<p>Most owners don't sit down and decide it's time for a CFO. The question gets forced on them &mdash; a lender asks for a forecast that doesn't exist, an investor wants board-grade reporting the business has never produced, or a growth plan needs a decision nobody in the room is qualified to make with confidence. By the time the question is unavoidable, it's usually been overdue for a while.</p>
+<p>Revenue thresholds get quoted a lot as a rule of thumb &mdash; somewhere in the low millions is where the conversation typically starts. They're a reasonable starting filter, but they're a poor substitute for looking at what's actually happening inside the business, because two businesses at the same revenue can be in completely different positions.</p>
+<h3>The signs that matter more than a number</h3>
+<p>Bigger decisions &mdash; hiring, a new location, a pricing change, taking on debt &mdash; being made on judgement and a spreadsheet nobody fully trusts, rather than a model that's been stress-tested. Revenue growing while cash gets tighter, with nobody able to say precisely why. Monthly reports that are accurate but don't actually help decide anything, because they show what happened last month and nothing about what's coming. Investors or a board suddenly expecting KPI tracking and forecasting the business has never had to produce before. Or a looming raise, acquisition or sale where the numbers need to hold up under someone else's scrutiny, not just the owner's.</p>
+<p>Any one of these on its own is manageable. Two or three of them showing up at the same time is usually the real signal &mdash; not the number on the top line.</p>
+<h3>Why the threshold moves business to business</h3>
+<p>A steady, single-site service business at $3 million in revenue with simple margins can often run well on a good bookkeeper and an engaged accountant for longer than the rules of thumb suggest. A business at half that revenue but scaling headcount fast, carrying debt, or fielding investor questions for the first time can be under-served without CFO-level input much sooner. Complexity, not revenue, is what actually drives the need &mdash; revenue just happens to correlate with complexity often enough to make a convenient shorthand.</p>
+<p>The practical test is simpler than a threshold: are the business's biggest decisions currently being made with a forward-looking financial view, or without one? If it's the second, the business already needs the function &mdash; the only open question is <a href="virtual-cfo-vs-accountant.html" class="inline-link">who's best placed to provide it</a>, and whether that's a full-time hire or a model that flexes with what the business can justify today. Waiting for a lender or an investor to force the question is a legitimate strategy. It's just rarely the cheapest one, because by the time it's forced, the business is answering it under pressure instead of on its own terms.</p>
+""",
+    },
 ]
 
 for _i, _art in enumerate(INSIGHTS):
