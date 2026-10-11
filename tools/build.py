@@ -1717,6 +1717,21 @@ INSIGHTS = [
 <p>Being profitable and being solvent are both necessary, and neither one implies the other. The businesses that get caught out are usually the ones that only ever checked the first.</p>
 """,
     },
+    {
+        "id": "virtual-cfo-vs-financial-controller",
+        "category": "Virtual CFO",
+        "title": "Virtual CFO vs financial controller: which one does a growing business actually need?",
+        "dek": "They solve different problems. Most scaling businesses eventually need both &mdash; just rarely at the same time.",
+        "body": """
+<p>As a business scales past the point where a bookkeeper and an engaged accountant can keep up, the usual next hire is a financial controller &mdash; someone to own the monthly close, tighten up the management accounts and get the numbers onto a reliable footing. It's a sensible step, and for a lot of owners it feels like the finance function is finally sorted. The gap it doesn't close is the one a virtual CFO is actually built to cover, and the two roles get confused often enough that it's worth being precise about where one ends and the other begins.</p>
+<p>A controller and a CFO both work with the same numbers. They're just asking different questions of them.</p>
+<h3>What a controller is built to do</h3>
+<p>A financial controller owns accuracy and process: a month-end close that happens on schedule, management accounts that can be trusted without re-checking, consistent reporting standards, and oversight of the bookkeeping and transactional work underneath it. This is genuinely difficult, valuable work, and a business without it is flying on numbers nobody's confident in. It's also, by design, focused on making sure the numbers are right &mdash; not on deciding what to do because of what they show.</p>
+<h3>What's still missing once the numbers are right</h3>
+<p>Accurate numbers don't answer whether a price rise will hold, whether the business can service a new loan without strain, or how a growth plan should actually be funded. That's the layer a CFO sits at &mdash; the <a href="virtual-cfo-vs-accountant.html" class="inline-link">same altitude gap that separates a CFO from an accountant</a>: forward-looking judgement on pricing, capital structure and scenario planning, and the willingness to sit in the room when a decision actually gets made rather than reporting on it afterwards. A controller who's excellent at their job isn't thereby someone who's sat through a capital raise or stress-tested a growth bet against a bad quarter &mdash; it was never the job they were hired to do.</p>
+<p>The two roles complement each other rather than compete, and the order they tend to arrive in matters less than making sure both eventually get resourced. A business that brings in CFO-level thinking without first fixing unreliable monthly numbers is building a strategy on a shaky base. A business that stops at a controller, however good, still has nobody in the room asking whether this year's decisions are the right ones &mdash; only someone confirming the numbers behind them are accurate. Recognising that these are two different jobs, not one role with two names, is usually the first step to resourcing the right one at the right time.</p>
+""",
+    },
 ]
 
 for _i, _art in enumerate(INSIGHTS):
